@@ -1,0 +1,258 @@
+import ufsi.NativePath
+__FS_TYPE=ufsi.NativePath.FILE_SYSTEM_TYPE__NATIVE_UNIX
+del ufsi
+
+
+# test absolute vs relative part
+ABS={
+	'path':r'/dir/file.ext',
+	'str':r'/dir/file.ext',
+	'split':(__FS_TYPE,None,None,['','dir'],'file','ext'),
+	'getDirsList':['','dir'],
+	'getDirsString':r'/dir/',
+	'getParentDir':r'/dir/',
+	'getFileName':'file.ext',
+	'getFileBase':'file',
+	'getFileExt':'ext',
+	'isAbsolute':True
+	}
+ABS_HOME={
+	'path':r'~/dir/file.ext',
+	'str':r'~/dir/file.ext',
+	'split':(__FS_TYPE,None,None,['~','dir'],'file','ext'),
+	'getDirsList':['~','dir'],
+	'getDirsString':r'~/dir/',
+	'getParentDir':r'~/dir/',
+	'getFileName':'file.ext',
+	'getFileBase':'file',
+	'getFileExt':'ext',
+	'isAbsolute':True
+	}
+ABS_USER={
+	'path':r'~root/dir/file.ext',
+	'str':r'~root/dir/file.ext',
+	'split':(__FS_TYPE,None,None,['~root','dir'],'file','ext'),
+	'getDirsList':['~root','dir'],
+	'getDirsString':r'~root/dir/',
+	'getParentDir':r'~root/dir/',
+	'getFileName':'file.ext',
+	'getFileBase':'file',
+	'getFileExt':'ext',
+	'isAbsolute':True
+	}
+REL={
+	'path':r'dir/file.ext',
+	'str':r'dir/file.ext',
+	'split':(__FS_TYPE,None,None,['dir'],'file','ext'),
+	'getDirsList':['dir'],
+	'getDirsString':r'dir/',
+	'getParentDir':r'dir/',
+	'getFileName':'file.ext',
+	'getFileBase':'file',
+	'getFileExt':'ext',
+	'isAbsolute':False
+	}
+
+
+# test dirs
+REL_NO_DIR={
+	'path':r'file',
+	'str':r'file',
+	'split':(__FS_TYPE,None,None,[],'file',None),
+	'getDirsList':[],
+	'getDirsString':r'',
+	'getParentDir':None,
+	'getFileName':'file',
+	'getFileBase':'file',
+	'getFileExt':None,
+	'isAbsolute':False
+	}
+ABS_ONE_DIR={
+	'path':r'/',
+	'str':r'/',
+	'split':(__FS_TYPE,None,None,[''],'',None),
+	'getDirsList':[''],
+	'getDirsString':r'/',
+	'getParentDir':None,
+	'getFileName':'',
+	'getFileBase':'',
+	'getFileExt':None,
+	'isAbsolute':True
+	}
+ABS_ONE_DIR_FILE={
+	'path':r'/file',
+	'str':r'/file',
+	'split':(__FS_TYPE,None,None,[''],'file',None),
+	'getDirsList':[''],
+	'getDirsString':r'/',
+	'getParentDir':r'/',
+	'getFileName':'file',
+	'getFileBase':'file',
+	'getFileExt':None,
+	'isAbsolute':True
+	}
+ABS_TWO_DIRS={
+	'path':r'/dir/',
+	'str':r'/dir/',
+	'split':(__FS_TYPE,None,None,['','dir'],'',None),
+	'getDirsList':['','dir'],
+	'getDirsString':r'/dir/',
+	'getParentDir':r'/',
+	'getFileName':'',
+	'getFileBase':'',
+	'getFileExt':None,
+	'isAbsolute':True
+	}
+ABS_TWO_DIRS_FILE={
+	'path':r'/dir/file',
+	'str':r'/dir/file',
+	'split':(__FS_TYPE,None,None,['','dir'],'file',None),
+	'getDirsList':['','dir'],
+	'getDirsString':r'/dir/',
+	'getParentDir':r'/dir/',
+	'getFileName':'file',
+	'getFileBase':'file',
+	'getFileExt':None,
+	'isAbsolute':True
+	}
+REL_ONE_DIR={
+	'path':r'dir/',
+	'str':r'dir/',
+	'split':(__FS_TYPE,None,None,['dir'],'',None),
+	'getDirsList':['dir'],
+	'getDirsString':r'dir/',
+	'getParentDir':r'',
+	'getFileName':'',
+	'getFileBase':'',
+	'getFileExt':None,
+	'isAbsolute':False
+	}
+REL_ONE_DIR_FILE={
+	'path':r'dir/file',
+	'str':r'dir/file',
+	'split':(__FS_TYPE,None,None,['dir'],'file',None),
+	'getDirsList':['dir'],
+	'getDirsString':r'dir/',
+	'getParentDir':r'dir/',
+	'getFileName':'file',
+	'getFileBase':'file',
+	'getFileExt':None,
+	'isAbsolute':False
+	}
+REL_THREE_DIRS_FILE={
+	'path':r'dir1/dir2/dir3/file',
+	'str':r'dir1/dir2/dir3/file',
+	'split':(__FS_TYPE,None,None,['dir1','dir2','dir3'],'file',None),
+	'getDirsList':['dir1','dir2','dir3'],
+	'getDirsString':r'dir1/dir2/dir3/',
+	'getParentDir':r'dir1/dir2/dir3/',
+	'getFileName':'file',
+	'getFileBase':'file',
+	'getFileExt':None,
+	'isAbsolute':False
+	}
+
+
+# test file parts
+EMPTY_FILE={
+	'path':r'',
+	'str':r'',
+	'split':(__FS_TYPE,None,None,[],'',None),
+	'getDirsList':[],
+	'getDirsString':r'',
+	'getParentDir':None,
+	'getFileName':'',
+	'getFileBase':'',
+	'getFileExt':None,
+	'isAbsolute':False
+	}
+EXT={
+	'path':r'.ext',
+	'str':r'.ext',
+	'split':(__FS_TYPE,None,None,[],'','ext'),
+	'getDirsList':[],
+	'getDirsString':r'',
+	'getParentDir':None,
+	'getFileName':'.ext',
+	'getFileBase':'',
+	'getFileExt':'ext',
+	'isAbsolute':False
+	}
+FILE_EXT={
+	'path':r'file.ext',
+	'str':r'file.ext',
+	'split':(__FS_TYPE,None,None,[],'file','ext'),
+	'getDirsList':[],
+	'getDirsString':r'',
+	'getParentDir':None,
+	'getFileName':'file.ext',
+	'getFileBase':'file',
+	'getFileExt':'ext',
+	'isAbsolute':False
+	}
+FILE_PERIOD={
+	'path':r'file.',
+	'str':r'file.',
+	'split':(__FS_TYPE,None,None,[],'file',''),
+	'getDirsList':[],
+	'getDirsString':r'',
+	'getParentDir':None,
+	'getFileName':'file.',
+	'getFileBase':'file',
+	'getFileExt':'',
+	'isAbsolute':False
+	}
+FILE={
+	'path':r'file',
+	'str':r'file',
+	'split':(__FS_TYPE,None,None,[],'file',None),
+	'getDirsList':[],
+	'getDirsString':r'',
+	'getParentDir':None,
+	'getFileName':'file',
+	'getFileBase':'file',
+	'getFileExt':None,
+	'isAbsolute':False
+	}
+DIR_FILE_EXT={
+	'path':r'dir/file.ext',
+	'str':r'dir/file.ext',
+	'split':(__FS_TYPE,None,None,['dir'],'file','ext'),
+	'getDriveLetter':None,
+	'getDirsList':['dir'],
+	'getDirsString':r'dir/',
+	'getParentDir':r'dir/',
+	'getFileName':'file.ext',
+	'getFileBase':'file',
+	'getFileExt':'ext',
+	'isAbsolute':False
+	}
+DIR_PERIOD_FILE_EXT={
+	'path':r'/dir.type/file.ext',
+	'str':r'/dir.type/file.ext',
+	'split':(__FS_TYPE,None,None,['','dir.type'],'file','ext'),
+	'getDriveLetter':None,
+	'getDirsList':['','dir.type'],
+	'getDirsString':r'/dir.type/',
+	'getParentDir':r'/dir.type/',
+	'getFileName':'file.ext',
+	'getFileBase':'file',
+	'getFileExt':'ext',
+	'isAbsolute':True
+	}
+
+
+
+def __outputTestedPaths():
+	import sys
+	selfModule=sys.modules[__name__]
+	del sys
+	
+	for s in filter(lambda s:not s.startswith('__'),dir(selfModule)):
+		#print s
+		d=getattr(selfModule,s)
+		print d['path']
+
+
+if __name__=="__main__":
+	__outputTestedPaths()

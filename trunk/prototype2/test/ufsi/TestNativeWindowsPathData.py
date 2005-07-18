@@ -1,0 +1,591 @@
+import ufsi.NativePath
+__UNC_FS_TYPE=ufsi.NativePath.FILE_SYSTEM_TYPE__NATIVE_UNC
+__WIN_FS_TYPE=ufsi.NativePath.FILE_SYSTEM_TYPE__NATIVE_WINDOWS
+del ufsi
+
+
+"""
+Paths to test:
+
+Windows:
+	Unc:
+		\\
+		\\server
+		\\server\
+		\\server.com
+		\\server.com\
+		\\server\file
+		\\server\file.
+		\\server\file.ext
+		\\server\dir\
+		\\server\dir\file.ext
+		//server/dir/file # windows doesn't find either of these
+		\/server/dir\file #  ditto...
+	
+	Drive Letter:
+		C:
+		C:file
+		C:dir\file
+		C:\
+		C:\file
+		C:\file.
+		C:\file.ext
+		C:\dir\
+		C:\dir\file.ext
+
+	Regular path:
+		\file
+		file
+		\dir\
+		dir\
+		\dir\file
+		dir\file
+		~\file
+		~\dir\
+		~user\dir\
+		~user\file
+	
+Unix & windows:
+	Regular path:
+		/file
+		/file.ext
+		/dir/
+		/dir/file.ext
+"""
+
+"""
+Template Test Data Dict:
+	{
+	'path':r'',
+	'str':r'',
+	'split':(__WIN_FS_TYPE,None,None,[''],'file',None),
+	'getDriveLetter':None,
+	'getDirsList':[''],
+	'getDirsString':r''+'\\',
+	'getParentDir':r''+'\\',
+	'getFileName':'',
+	'getFileBase':'',
+	'getFileExt':'',
+	'isAbsolute':True
+	}
+"""
+
+# test abs vs rel
+ABS_UNC={
+	'path':r'\\test\dir\file',
+	'str':r'\\test\dir\file',
+	'split':(__UNC_FS_TYPE,'test',None,['','dir'],'file',None),
+	'getDriveLetter':None,
+	'getDirsList':['','dir'],
+	'getDirsString':r'\dir'+'\\',
+	'getParentDir':r'\\test\dir'+'\\',
+	'getFileName':'file',
+	'getFileBase':'file',
+	'getFileExt':None,
+	'isAbsolute':True
+	}
+ABS_DRIVE={
+	'path':r'C:\dir\file',
+	'str':r'C:\dir\file',
+	'split':(__WIN_FS_TYPE,None,None,['','dir'],'file',None),
+	'getDriveLetter':'C',
+	'getDirsList':['','dir'],
+	'getDirsString':r'\dir'+'\\',
+	'getParentDir':r'C:\dir'+'\\',
+	'getFileName':'file',
+	'getFileBase':'file',
+	'getFileExt':None,
+	'isAbsolute':True
+	}
+ABS={
+	'path':r'\dir\file',
+	'str':r'\dir\file',
+	'split':(__WIN_FS_TYPE,None,None,['','dir'],'file',None),
+	'getDriveLetter':None,
+	'getDirsList':['','dir'],
+	'getDirsString':r'\dir'+'\\',
+	'getParentDir':r'\dir'+'\\',
+	'getFileName':'file',
+	'getFileBase':'file',
+	'getFileExt':None,
+	'isAbsolute':True
+	}
+ABS_HOME={
+	'path':r'~\dir\file',
+	'str':r'~\dir\file',
+	'split':(__WIN_FS_TYPE,None,None,['~','dir'],'file',None),
+	'getDriveLetter':None,
+	'getDirsList':['~','dir'],
+	'getDirsString':r'~\dir'+'\\',
+	'getParentDir':r'~\dir'+'\\',
+	'getFileName':'file',
+	'getFileBase':'file',
+	'getFileExt':None,
+	'isAbsolute':True
+	}
+ABS_USER={
+	'path':r'~user\dir\file',
+	'str':r'~user\dir\file',
+	'split':(__WIN_FS_TYPE,None,None,['~user','dir'],'file',None),
+	'getDriveLetter':None,
+	'getDirsList':['~user','dir'],
+	'getDirsString':r'~user\dir'+'\\',
+	'getParentDir':r'~user\dir'+'\\',
+	'getFileName':'file',
+	'getFileBase':'file',
+	'getFileExt':None,
+	'isAbsolute':True
+	}
+REL={
+	'path':r'dir\file',
+	'str':r'dir\file',
+	'split':(__WIN_FS_TYPE,None,None,['dir'],'file',None),
+	'getDriveLetter':None,
+	'getDirsList':['dir'],
+	'getDirsString':r'dir'+'\\',
+	'getParentDir':r'dir'+'\\',
+	'getFileName':'file',
+	'getFileBase':'file',
+	'getFileExt':None,
+	'isAbsolute':False
+	}
+
+
+# test unc host name
+# TODO: should this result in a None filename? - actually the '\' char should be included as a dir path
+UNC_HOST={
+	'path':r'\\test',
+	'str':r'\\test',
+	'split':(__UNC_FS_TYPE,'test',None,[],'',None),
+	'getDriveLetter':None,
+	'getDirsList':[],
+	'getDirsString':r'',
+	'getParentDir':None,
+	'getFileName':'',
+	'getFileBase':'',
+	'getFileExt':None,
+	'isAbsolute':True
+	}
+UNC_HOST_SLASH={
+	'path':r'\\test'+'\\',
+	'str':r'\\test'+'\\',
+	'split':(__UNC_FS_TYPE,'test',None,[''],'',None),
+	'getDriveLetter':None,
+	'getDirsList':[''],
+	'getDirsString':'\\',
+	'getParentDir':None,
+	'getFileName':'',
+	'getFileBase':'',
+	'getFileExt':None,
+	'isAbsolute':True
+	}
+UNC_HOST_DIR={
+	'path':r'\\test\dir'+'\\',
+	'str':r'\\test\dir'+'\\',
+	'split':(__UNC_FS_TYPE,'test',None,['','dir'],'',None),
+	'getDriveLetter':None,
+	'getDirsList':['','dir'],
+	'getDirsString':r'\dir'+'\\',
+	'getParentDir':r'\\test'+'\\',
+	'getFileName':'',
+	'getFileBase':'',
+	'getFileExt':None,
+	'isAbsolute':True
+	}
+
+
+
+# test drive letter
+DRIVE_LETTER_COLON={
+	'path':r'C:',
+	'str':r'C:',
+	'split':(__WIN_FS_TYPE,None,None,[],'',None),
+	'getDriveLetter':'C',
+	'getDirsList':[],
+	'getDirsString':r'',
+	'getParentDir':None,
+	'getFileName':'',
+	'getFileBase':'',
+	'getFileExt':None,
+	'isAbsolute':True
+	}
+DRIVE_LETTER_COLON_SLASH={
+	'path':r'C:'+'\\',
+	'str':r'C:'+'\\',
+	'split':(__WIN_FS_TYPE,None,None,[''],'',None),
+	'getDriveLetter':'C',
+	'getDirsList':[''],
+	'getDirsString':'\\',
+	'getParentDir':None,
+	'getFileName':'',
+	'getFileBase':'',
+	'getFileExt':None,
+	'isAbsolute':True
+	}
+DRIVE_LETTER_COLON_FILE={
+	'path':r'C:file',
+	'str':r'C:file',
+	'split':(__WIN_FS_TYPE,None,None,[],'file',None),
+	'getDriveLetter':'C',
+	'getDirsList':[],
+	'getDirsString':r'',
+	'getParentDir':None,
+	'getFileName':'file',
+	'getFileBase':'file',
+	'getFileExt':None,
+	'isAbsolute':True
+	}
+DRIVE_LETTER_COLON_SLASH_FILE={
+	'path':r'C:\file',
+	'str':r'C:\file',
+	'split':(__WIN_FS_TYPE,None,None,[''],'file',None),
+	'getDriveLetter':'C',
+	'getDirsList':[''],
+	'getDirsString':'\\',
+	'getParentDir':r'C:'+'\\',
+	'getFileName':'file',
+	'getFileBase':'file',
+	'getFileExt':None,
+	'isAbsolute':True
+	}
+DRIVE_LETTER_COLON_DIR={
+	'path':r'C:dir'+'\\',
+	'str':r'C:dir'+'\\',
+	'split':(__WIN_FS_TYPE,None,None,['dir'],'',None),
+	'getDriveLetter':'C',
+	'getDirsList':['dir'],
+	'getDirsString':r'dir'+'\\',
+	'getParentDir':r'C:',
+	'getFileName':'',
+	'getFileBase':'',
+	'getFileExt':None,
+	'isAbsolute':True
+	}
+DRIVE_LETTER_COLON_SLASH_DIR={
+	'path':r'C:\dir'+'\\',
+	'str':r'C:\dir'+'\\',
+	'split':(__WIN_FS_TYPE,None,None,['','dir'],'',None),
+	'getDriveLetter':'C',
+	'getDirsList':['','dir'],
+	'getDirsString':r'\dir'+'\\',
+	'getParentDir':r'C:\dir'+'\\',
+	'getFileName':'',
+	'getFileBase':'',
+	'getFileExt':None,
+	'isAbsolute':True
+	}
+
+
+# test different slash types
+BACK_SLASHES_ONLY={
+	'path':r'\dir\file',
+	'str':r'\dir\file',
+	'split':(__WIN_FS_TYPE,None,None,['','dir'],'file',None),
+	'getDriveLetter':None,
+	'getDirsList':['','dir'],
+	'getDirsString':r'\dir'+'\\',
+	'getParentDir':r'\dir'+'\\',
+	'getFileName':'file',
+	'getFileBase':'file',
+	'getFileExt':None,
+	'isAbsolute':True
+	}
+MIXED_SLASHES={
+	'path':r'\dir/file',
+	'str':r'\dir\file',
+	'split':(__WIN_FS_TYPE,None,None,['','dir'],'file',None),
+	'getDriveLetter':None,
+	'getDirsList':['','dir'],
+	'getDirsString':r'\dir'+'\\',
+	'getParentDir':r'\dir'+'\\',
+	'getFileName':'file',
+	'getFileBase':'file',
+	'getFileExt':None,
+	'isAbsolute':True
+	}
+FORWARD_SLASHES_ONLY={
+	'path':r'/dir/file',
+	'str':r'\dir\file',
+	'split':(__WIN_FS_TYPE,None,None,['','dir'],'file',None),
+	'getDriveLetter':None,
+	'getDirsList':['','dir'],
+	'getDirsString':r'\dir'+'\\',
+	'getParentDir':r'\dir'+'\\',
+	'getFileName':'file',
+	'getFileBase':'file',
+	'getFileExt':None,
+	'isAbsolute':True
+	}
+DRIVE_BACK_SLASH={
+	'path':r'C:'+'\\',
+	'str':r'C:'+'\\',
+	'split':(__WIN_FS_TYPE,None,None,[''],'',None),
+	'getDriveLetter':'C',
+	'getDirsList':[''],
+	'getDirsString':'\\',
+	'getParentDir':None,
+	'getFileName':'',
+	'getFileBase':'',
+	'getFileExt':None,
+	'isAbsolute':True
+	}
+DRIVE_FORWARD_SLASH={
+	'path':r'C:/',
+	'str':r'C:'+'\\',
+	'split':(__WIN_FS_TYPE,None,None,[''],'',None),
+	'getDriveLetter':'C',
+	'getDirsList':[''],
+	'getDirsString':'\\',
+	'getParentDir':None,
+	'getFileName':'',
+	'getFileBase':'',
+	'getFileExt':None,
+	'isAbsolute':True
+	}
+UNC_BACK_SLASH={
+	'path':r'\\test'+'\\',
+	'str':r'\\test'+'\\',
+	'split':(__UNC_FS_TYPE,'test',None,[''],'',None),
+	'getDriveLetter':None,
+	'getDirsList':[''],
+	'getDirsString':'\\',
+	'getParentDir':None,
+	'getFileName':'',
+	'getFileBase':'',
+	'getFileExt':None,
+	'isAbsolute':True
+	}
+# TODO: this is more flexible than a real windows UNC interpreter - is this ok?
+UNC_FORWARD_SLASH={
+	'path':r'//test/',
+	'str':r'\\test'+'\\',
+	'split':(__UNC_FS_TYPE,'test',None,[''],'',None),
+	'getDriveLetter':None,
+	'getDirsList':[''],
+	'getDirsString':'\\',
+	'getParentDir':None,
+	'getFileName':'',
+	'getFileBase':'',
+	'getFileExt':None,
+	'isAbsolute':True
+	}
+
+
+
+# test dirs
+REL_NO_DIR={
+	'path':r'file',
+	'str':r'file',
+	'split':(__WIN_FS_TYPE,None,None,[],'file',None),
+	'getDriveLetter':None,
+	'getDirsList':[],
+	'getDirsString':'',
+	'getParentDir':None,
+	'getFileName':'file',
+	'getFileBase':'file',
+	'getFileExt':None,
+	'isAbsolute':False
+	}
+ABS_ONE_DIR={
+	'path':'\\',
+	'str':'\\',
+	'split':(__WIN_FS_TYPE,None,None,[''],'',None),
+	'getDriveLetter':None,
+	'getDirsList':[''],
+	'getDirsString':'\\',
+	'getParentDir':None,
+	'getFileName':'',
+	'getFileBase':'',
+	'getFileExt':None,
+	'isAbsolute':True
+	}
+ABS_ONE_DIR_FILE={
+	'path':r'\file',
+	'str':r'\file',
+	'split':(__WIN_FS_TYPE,None,None,[''],'file',None),
+	'getDriveLetter':None,
+	'getDirsList':[''],
+	'getDirsString':r''+'\\',
+	'getParentDir':None,
+	'getFileName':'file',
+	'getFileBase':'file',
+	'getFileExt':None,
+	'isAbsolute':True
+	}
+ABS_TWO_DIRS={
+	'path':r'\dir'+'\\',
+	'str':r'\dir'+'\\',
+	'split':(__WIN_FS_TYPE,None,None,['','dir'],'',None),
+	'getDriveLetter':None,
+	'getDirsList':['','dir'],
+	'getDirsString':r'\dir'+'\\',
+	'getParentDir':'\\',
+	'getFileName':'',
+	'getFileBase':'',
+	'getFileExt':None,
+	'isAbsolute':True
+	}
+ABS_TWO_DIRS_FILE={
+	'path':r'\dir\file',
+	'str':r'\dir\file',
+	'split':(__WIN_FS_TYPE,None,None,['','dir'],'file',None),
+	'getDriveLetter':None,
+	'getDirsList':['','dir'],
+	'getDirsString':r'\dir'+'\\',
+	'getParentDir':r'\dir'+'\\',
+	'getFileName':'file',
+	'getFileBase':'file',
+	'getFileExt':None,
+	'isAbsolute':True
+	}
+# TODO: apparently this dirs parent dir should be ''
+REL_ONE_DIR={
+	'path':r'dir'+'\\',
+	'str':r'dir'+'\\',
+	'split':(__WIN_FS_TYPE,None,None,['dir'],'',None),
+	'getDriveLetter':None,
+	'getDirsList':['dir'],
+	'getDirsString':r'dir'+'\\',
+	'getParentDir':None,
+	'getFileName':'',
+	'getFileBase':'',
+	'getFileExt':None,
+	'isAbsolute':False
+	}
+REL_ONE_DIR_FILE={
+	'path':r'dir\file',
+	'str':r'dir\file',
+	'split':(__WIN_FS_TYPE,None,None,['dir'],'file',None),
+	'getDriveLetter':None,
+	'getDirsList':['dir'],
+	'getDirsString':r'dir'+'\\',
+	'getParentDir':r'dir'+'\\',
+	'getFileName':'file',
+	'getFileBase':'file',
+	'getFileExt':None,
+	'isAbsolute':False
+	}
+REL_THREE_DIRS_FILE={
+	'path':r'dir1\dir2\dir3\file',
+	'str':r'dir1\dir2\dir3\file',
+	'split':(__WIN_FS_TYPE,None,None,['dir1','dir2','dir3'],'file',None),
+	'getDriveLetter':None,
+	'getDirsList':['dir1','dir2','dir3'],
+	'getDirsString':r'dir1\dir2\dir3'+'\\',
+	'getParentDir':r'dir1\dir2\dir3'+'\\',
+	'getFileName':'file',
+	'getFileBase':'file',
+	'getFileExt':None,
+	'isAbsolute':False
+	}
+
+
+
+
+# test file parts
+EMPTY_FILE={
+	'path':r'',
+	'str':r'',
+	'split':(__WIN_FS_TYPE,None,None,[],'',None),
+	'getDriveLetter':None,
+	'getDirsList':[],
+	'getDirsString':'',
+	'getParentDir':None,
+	'getFileName':'',
+	'getFileBase':'',
+	'getFileExt':None,
+	'isAbsolute':False
+	}
+EXT={
+	'path':r'.ext',
+	'str':r'.ext',
+	'split':(__WIN_FS_TYPE,None,None,[],'','ext'),
+	'getDriveLetter':None,
+	'getDirsList':[],
+	'getDirsString':'',
+	'getParentDir':None,
+	'getFileName':'.ext',
+	'getFileBase':'',
+	'getFileExt':'ext',
+	'isAbsolute':False
+	}
+FILE_EXT={
+	'path':r'file.ext',
+	'str':r'file.ext',
+	'split':(__WIN_FS_TYPE,None,None,[],'file','ext'),
+	'getDriveLetter':None,
+	'getDirsList':[],
+	'getDirsString':'',
+	'getParentDir':None,
+	'getFileName':'file.ext',
+	'getFileBase':'file',
+	'getFileExt':'ext',
+	'isAbsolute':False
+	}
+FILE_PERIOD={
+	'path':r'file.',
+	'str':r'file.',
+	'split':(__WIN_FS_TYPE,None,None,[],'file',''),
+	'getDriveLetter':None,
+	'getDirsList':[],
+	'getDirsString':'',
+	'getParentDir':None,
+	'getFileName':'file.',
+	'getFileBase':'file',
+	'getFileExt':'',
+	'isAbsolute':False
+	}
+FILE={
+	'path':r'file',
+	'str':r'file',
+	'split':(__WIN_FS_TYPE,None,None,[],'file',None),
+	'getDriveLetter':None,
+	'getDirsList':[],
+	'getDirsString':'',
+	'getParentDir':None,
+	'getFileName':'file',
+	'getFileBase':'file',
+	'getFileExt':None,
+	'isAbsolute':False
+	}
+DIR_FILE_EXT={
+	'path':r'dir\file.ext',
+	'str':r'dir\file.ext',
+	'split':(__WIN_FS_TYPE,None,None,['dir'],'file','ext'),
+	'getDriveLetter':None,
+	'getDirsList':['dir'],
+	'getDirsString':r'dir'+'\\',
+	'getParentDir':r'dir'+'\\',
+	'getFileName':'file.ext',
+	'getFileBase':'file',
+	'getFileExt':'ext',
+	'isAbsolute':False
+	}
+DIR_PERIOD_FILE_EXT={
+	'path':r'\dir.type\file.ext',
+	'str':r'\dir.type\file.ext',
+	'split':(__WIN_FS_TYPE,None,None,['','dir.type'],'file','ext'),
+	'getDriveLetter':None,
+	'getDirsList':['','dir.type'],
+	'getDirsString':r'\dir.type'+'\\',
+	'getParentDir':r'\dir.type'+'\\',
+	'getFileName':'file.ext',
+	'getFileBase':'file',
+	'getFileExt':'ext',
+	'isAbsolute':True
+	}
+
+
+def __outputTestedPaths():
+	import sys
+	selfModule=sys.modules[__name__]
+	del sys
+	
+	for s in filter(lambda s:not s.startswith('__'),dir(selfModule)):
+		#print s
+		d=getattr(selfModule,s)
+		print d['path']
+
+
+if __name__=="__main__":
+	__outputTestedPaths()
