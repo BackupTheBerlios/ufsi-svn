@@ -170,7 +170,7 @@ class NativeUnixPath(AbstractNativePath):
 			return None
 
 		# if our path is already pointing to a directory, get the dir's parent dir
-		if self.getFileName()=='':
+		if fileName=='':
 			dirs=dirs[:-1]
 
 		return NativeUnixPath(self._dirListToDirString(dirs))
@@ -241,22 +241,33 @@ class NativeWindowsPath(AbstractNativePath):
 
 
 	def getParentDirPath(self):
-		raise NotImplementedError
-		# TODO: Code this for windows
-		dirs=self.getDirsList()
-		fileName=self.getFileName()
+		"""
+		TODO: What is the parent dir of 'file' or 'dir/'? Is it '' or is it None?
+		"""
+		s=self.split()
+		dirs=s[3]
+		fileName=s[4]
 
 		# if it's a relative path and no dirs found,
-		# or it's an absolute path but only the '' dir (ie. '/' path) and no fileName
+		# or it's an absolute path but only the '' dir (ie. '\' path) and no fileName
 		if len(dirs)==0 or (len(dirs)==1 and dirs[0]=='' and fileName==''):
 			# then it has no parent dir
 			return None
 
 		# if our path is already pointing to a directory, get the dir's parent dir
-		if self.getFileName()=='':
+		if fileName=='':
 			dirs=dirs[:-1]
+		
+		parentDirs=self._dirListToDirString(dirs)
 
-		return NativeWindowsPath(self._dirListToDirString(dirs))
+		# are we UNC?
+		if s[0]==FILE_SYSTEM_TYPE__NATIVE_UNC:
+			return NativeWindowsPath('\\'+'\\'+s[1]+parentDirs)
+		else:
+			d=self.getDriveLetter()
+			if d!=None: d+=':'
+			else: d=''
+			return NativeWindowsPath(d+parentDirs)
 
 
 	# windows fs type only
