@@ -55,7 +55,9 @@ class TestNativeWindowsPath(unittest.TestCase):
 		self.runMethodTest('getDirsString')
 	def testGetParentDirPathMethod(self):
 		for d in self.testData:
-			self.__assertEqual(str(d['pathObject'].getParentDirPath()),d['getParentDir'],'getParentDirPath',d['path'])
+			result=d['pathObject'].getParentDirPath()
+			if result: result=str(result)
+			self.__assertEqual(result,d['getParentDir'],'getParentDirPath',d['path'])
 			self.executedTests+=1
 
 	# =========================
