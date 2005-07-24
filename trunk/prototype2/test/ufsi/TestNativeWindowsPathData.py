@@ -10,47 +10,47 @@ Paths to test:
 Windows:
 	Unc:
 		\\
-		\\server
-		\\server\
-		\\server.com
-		\\server.com\
-		\\server\file
-		\\server\file.
-		\\server\file.ext
-		\\server\dir\
-		\\server\dir\file.ext
-		//server/dir/file # windows doesn't find either of these
-		\/server/dir\file #  ditto...
+		\\ufsitest
+		\\ufsitest\
+		\\ufsitest.com
+		\\ufsitest.com\
+		\\ufsitest\ufsifile
+		\\ufsitest\ufsifile.
+		\\ufsitest\ufsifile.ext
+		\\ufsitest\ufsidir\
+		\\ufsitest\ufsidir\ufsifile.ext
+		//ufsitest/ufsidir/ufsifile # windows doesn't find either of these
+		\/ufsitest/ufsidir\ufsifile #  ditto...
 	
 	Drive Letter:
 		C:
-		C:file
-		C:dir\file
+		C:ufsifile
+		C:ufsidir\ufsifile
 		C:\
-		C:\file
-		C:\file.
-		C:\file.ext
-		C:\dir\
-		C:\dir\file.ext
+		C:\ufsifile
+		C:\ufsifile.
+		C:\ufsifile.ext
+		C:\ufsidir\
+		C:\ufsidir\ufsifile.ext
 
 	Regular path:
-		\file
-		file
-		\dir\
-		dir\
-		\dir\file
-		dir\file
-		~\file
-		~\dir\
-		~user\dir\
-		~user\file
+		\ufsifile
+		ufsifile
+		\ufsidir\
+		ufsidir\
+		\ufsidir\ufsifile
+		ufsidir\ufsifile
+		~\ufsifile
+		~\ufsidir\
+		~user\ufsidir\
+		~user\ufsifile
 	
 Unix & windows:
 	Regular path:
-		/file
-		/file.ext
-		/dir/
-		/dir/file.ext
+		/ufsifile
+		/ufsifile.ext
+		/ufsidir/
+		/ufsidir/ufsifile.ext
 """
 
 """
@@ -58,7 +58,7 @@ Template Test Data Dict:
 	{
 	'path':r'',
 	'str':r'',
-	'split':(__WIN_FS_TYPE,None,None,[''],'file',None),
+	'split':(__WIN_FS_TYPE,None,None,[''],'ufsifile',None),
 	'getDriveLetter':None,
 	'getDirsList':[''],
 	'getDirsString':r''+'\\',
@@ -72,91 +72,91 @@ Template Test Data Dict:
 
 # test abs vs rel
 ABS_UNC={
-	'path':r'\\test\dir\file',
-	'str':r'\\test\dir\file',
-	'split':(__UNC_FS_TYPE,'test',None,['','dir'],'file',None),
+	'path':r'\\ufsitest\ufsidir\ufsifile',
+	'str':r'\\ufsitest\ufsidir\ufsifile',
+	'split':(__UNC_FS_TYPE,'ufsitest',None,['','ufsidir'],'ufsifile',None),
 	'getDriveLetter':None,
-	'getDirsList':['','dir'],
-	'getDirsString':r'\dir'+'\\',
-	'getParentDir':r'\\test\dir'+'\\',
-	'getFileName':'file',
-	'getFileBase':'file',
+	'getDirsList':['','ufsidir'],
+	'getDirsString':r'\ufsidir'+'\\',
+	'getParentDir':r'\\ufsitest\ufsidir'+'\\',
+	'getFileName':'ufsifile',
+	'getFileBase':'ufsifile',
 	'getFileExt':None,
 	'isAbsolute':True
 	}
 ABS_DRIVE={
-	'path':r'C:\dir\file',
-	'str':r'C:\dir\file',
-	'split':(__WIN_FS_TYPE,None,None,['','dir'],'file',None),
+	'path':r'C:\ufsidir\ufsifile',
+	'str':r'C:\ufsidir\ufsifile',
+	'split':(__WIN_FS_TYPE,None,None,['','ufsidir'],'ufsifile',None),
 	'getDriveLetter':'C',
-	'getDirsList':['','dir'],
-	'getDirsString':r'\dir'+'\\',
-	'getParentDir':r'C:\dir'+'\\',
-	'getFileName':'file',
-	'getFileBase':'file',
+	'getDirsList':['','ufsidir'],
+	'getDirsString':r'\ufsidir'+'\\',
+	'getParentDir':r'C:\ufsidir'+'\\',
+	'getFileName':'ufsifile',
+	'getFileBase':'ufsifile',
 	'getFileExt':None,
 	'isAbsolute':True
 	}
 ABS={
-	'path':r'\dir\file',
-	'str':r'\dir\file',
-	'split':(__WIN_FS_TYPE,None,None,['','dir'],'file',None),
+	'path':r'\ufsidir\ufsifile',
+	'str':r'\ufsidir\ufsifile',
+	'split':(__WIN_FS_TYPE,None,None,['','ufsidir'],'ufsifile',None),
 	'getDriveLetter':None,
-	'getDirsList':['','dir'],
-	'getDirsString':r'\dir'+'\\',
-	'getParentDir':r'\dir'+'\\',
-	'getFileName':'file',
-	'getFileBase':'file',
+	'getDirsList':['','ufsidir'],
+	'getDirsString':r'\ufsidir'+'\\',
+	'getParentDir':r'\ufsidir'+'\\',
+	'getFileName':'ufsifile',
+	'getFileBase':'ufsifile',
 	'getFileExt':None,
 	'isAbsolute':True
 	}
 ABS_HOME={
-	'path':r'~\dir\file',
-	'str':r'~\dir\file',
-	'split':(__WIN_FS_TYPE,None,None,['~','dir'],'file',None),
+	'path':r'~\ufsidir\ufsifile',
+	'str':r'~\ufsidir\ufsifile',
+	'split':(__WIN_FS_TYPE,None,None,['~','ufsidir'],'ufsifile',None),
 	'getDriveLetter':None,
-	'getDirsList':['~','dir'],
-	'getDirsString':r'~\dir'+'\\',
-	'getParentDir':r'~\dir'+'\\',
-	'getFileName':'file',
-	'getFileBase':'file',
+	'getDirsList':['~','ufsidir'],
+	'getDirsString':r'~\ufsidir'+'\\',
+	'getParentDir':r'~\ufsidir'+'\\',
+	'getFileName':'ufsifile',
+	'getFileBase':'ufsifile',
 	'getFileExt':None,
 	'isAbsolute':True
 	}
 ABS_USER={
-	'path':r'~user\dir\file',
-	'str':r'~user\dir\file',
-	'split':(__WIN_FS_TYPE,None,None,['~user','dir'],'file',None),
+	'path':r'~user\ufsidir\ufsifile',
+	'str':r'~user\ufsidir\ufsifile',
+	'split':(__WIN_FS_TYPE,None,None,['~user','ufsidir'],'ufsifile',None),
 	'getDriveLetter':None,
-	'getDirsList':['~user','dir'],
-	'getDirsString':r'~user\dir'+'\\',
-	'getParentDir':r'~user\dir'+'\\',
-	'getFileName':'file',
-	'getFileBase':'file',
+	'getDirsList':['~user','ufsidir'],
+	'getDirsString':r'~user\ufsidir'+'\\',
+	'getParentDir':r'~user\ufsidir'+'\\',
+	'getFileName':'ufsifile',
+	'getFileBase':'ufsifile',
 	'getFileExt':None,
 	'isAbsolute':True
 	}
 REL={
-	'path':r'dir\file',
-	'str':r'dir\file',
-	'split':(__WIN_FS_TYPE,None,None,['dir'],'file',None),
+	'path':r'ufsidir\ufsifile',
+	'str':r'ufsidir\ufsifile',
+	'split':(__WIN_FS_TYPE,None,None,['ufsidir'],'ufsifile',None),
 	'getDriveLetter':None,
-	'getDirsList':['dir'],
-	'getDirsString':r'dir'+'\\',
-	'getParentDir':r'dir'+'\\',
-	'getFileName':'file',
-	'getFileBase':'file',
+	'getDirsList':['ufsidir'],
+	'getDirsString':r'ufsidir'+'\\',
+	'getParentDir':r'ufsidir'+'\\',
+	'getFileName':'ufsifile',
+	'getFileBase':'ufsifile',
 	'getFileExt':None,
 	'isAbsolute':False
 	}
 
 
 # test unc host name
-# TODO: should this result in a None filename? - actually the '\' char should be included as a dir path
+# TODO: should this result in a None ufsifilename? - actually the '\' char should be included as a ufsidir path
 UNC_HOST={
-	'path':r'\\test',
-	'str':r'\\test',
-	'split':(__UNC_FS_TYPE,'test',None,[],'',None),
+	'path':r'\\ufsitest',
+	'str':r'\\ufsitest',
+	'split':(__UNC_FS_TYPE,'ufsitest',None,[],'',None),
 	'getDriveLetter':None,
 	'getDirsList':[],
 	'getDirsString':r'',
@@ -167,9 +167,9 @@ UNC_HOST={
 	'isAbsolute':True
 	}
 UNC_HOST_SLASH={
-	'path':r'\\test'+'\\',
-	'str':r'\\test'+'\\',
-	'split':(__UNC_FS_TYPE,'test',None,[''],'',None),
+	'path':r'\\ufsitest'+'\\',
+	'str':r'\\ufsitest'+'\\',
+	'split':(__UNC_FS_TYPE,'ufsitest',None,[''],'',None),
 	'getDriveLetter':None,
 	'getDirsList':[''],
 	'getDirsString':'\\',
@@ -180,13 +180,13 @@ UNC_HOST_SLASH={
 	'isAbsolute':True
 	}
 UNC_HOST_DIR={
-	'path':r'\\test\dir'+'\\',
-	'str':r'\\test\dir'+'\\',
-	'split':(__UNC_FS_TYPE,'test',None,['','dir'],'',None),
+	'path':r'\\ufsitest\ufsidir'+'\\',
+	'str':r'\\ufsitest\ufsidir'+'\\',
+	'split':(__UNC_FS_TYPE,'ufsitest',None,['','ufsidir'],'',None),
 	'getDriveLetter':None,
-	'getDirsList':['','dir'],
-	'getDirsString':r'\dir'+'\\',
-	'getParentDir':r'\\test'+'\\',
+	'getDirsList':['','ufsidir'],
+	'getDirsString':r'\ufsidir'+'\\',
+	'getParentDir':r'\\ufsitest'+'\\',
 	'getFileName':'',
 	'getFileBase':'',
 	'getFileExt':None,
@@ -223,38 +223,38 @@ DRIVE_LETTER_COLON_SLASH={
 	'isAbsolute':True
 	}
 DRIVE_LETTER_COLON_FILE={
-	'path':r'C:file',
-	'str':r'C:file',
-	'split':(__WIN_FS_TYPE,None,None,[],'file',None),
+	'path':r'C:ufsifile',
+	'str':r'C:ufsifile',
+	'split':(__WIN_FS_TYPE,None,None,[],'ufsifile',None),
 	'getDriveLetter':'C',
 	'getDirsList':[],
 	'getDirsString':r'',
-	'getParentDir':None,
-	'getFileName':'file',
-	'getFileBase':'file',
+	'getParentDir':r'C:',
+	'getFileName':'ufsifile',
+	'getFileBase':'ufsifile',
 	'getFileExt':None,
 	'isAbsolute':True
 	}
 DRIVE_LETTER_COLON_SLASH_FILE={
-	'path':r'C:\file',
-	'str':r'C:\file',
-	'split':(__WIN_FS_TYPE,None,None,[''],'file',None),
+	'path':r'C:\ufsifile',
+	'str':r'C:\ufsifile',
+	'split':(__WIN_FS_TYPE,None,None,[''],'ufsifile',None),
 	'getDriveLetter':'C',
 	'getDirsList':[''],
 	'getDirsString':'\\',
 	'getParentDir':r'C:'+'\\',
-	'getFileName':'file',
-	'getFileBase':'file',
+	'getFileName':'ufsifile',
+	'getFileBase':'ufsifile',
 	'getFileExt':None,
 	'isAbsolute':True
 	}
 DRIVE_LETTER_COLON_DIR={
-	'path':r'C:dir'+'\\',
-	'str':r'C:dir'+'\\',
-	'split':(__WIN_FS_TYPE,None,None,['dir'],'',None),
+	'path':r'C:ufsidir'+'\\',
+	'str':r'C:ufsidir'+'\\',
+	'split':(__WIN_FS_TYPE,None,None,['ufsidir'],'',None),
 	'getDriveLetter':'C',
-	'getDirsList':['dir'],
-	'getDirsString':r'dir'+'\\',
+	'getDirsList':['ufsidir'],
+	'getDirsString':r'ufsidir'+'\\',
 	'getParentDir':r'C:',
 	'getFileName':'',
 	'getFileBase':'',
@@ -262,12 +262,12 @@ DRIVE_LETTER_COLON_DIR={
 	'isAbsolute':True
 	}
 DRIVE_LETTER_COLON_SLASH_DIR={
-	'path':r'C:\dir'+'\\',
-	'str':r'C:\dir'+'\\',
-	'split':(__WIN_FS_TYPE,None,None,['','dir'],'',None),
+	'path':r'C:\ufsidir'+'\\',
+	'str':r'C:\ufsidir'+'\\',
+	'split':(__WIN_FS_TYPE,None,None,['','ufsidir'],'',None),
 	'getDriveLetter':'C',
-	'getDirsList':['','dir'],
-	'getDirsString':r'\dir'+'\\',
+	'getDirsList':['','ufsidir'],
+	'getDirsString':r'\ufsidir'+'\\',
 	'getParentDir':r'C:'+'\\',
 	'getFileName':'',
 	'getFileBase':'',
@@ -278,41 +278,41 @@ DRIVE_LETTER_COLON_SLASH_DIR={
 
 # test different slash types
 BACK_SLASHES_ONLY={
-	'path':r'\dir\file',
-	'str':r'\dir\file',
-	'split':(__WIN_FS_TYPE,None,None,['','dir'],'file',None),
+	'path':r'\ufsidir\ufsifile',
+	'str':r'\ufsidir\ufsifile',
+	'split':(__WIN_FS_TYPE,None,None,['','ufsidir'],'ufsifile',None),
 	'getDriveLetter':None,
-	'getDirsList':['','dir'],
-	'getDirsString':r'\dir'+'\\',
-	'getParentDir':r'\dir'+'\\',
-	'getFileName':'file',
-	'getFileBase':'file',
+	'getDirsList':['','ufsidir'],
+	'getDirsString':r'\ufsidir'+'\\',
+	'getParentDir':r'\ufsidir'+'\\',
+	'getFileName':'ufsifile',
+	'getFileBase':'ufsifile',
 	'getFileExt':None,
 	'isAbsolute':True
 	}
 MIXED_SLASHES={
-	'path':r'\dir/file',
-	'str':r'\dir\file',
-	'split':(__WIN_FS_TYPE,None,None,['','dir'],'file',None),
+	'path':r'\ufsidir/ufsifile',
+	'str':r'\ufsidir\ufsifile',
+	'split':(__WIN_FS_TYPE,None,None,['','ufsidir'],'ufsifile',None),
 	'getDriveLetter':None,
-	'getDirsList':['','dir'],
-	'getDirsString':r'\dir'+'\\',
-	'getParentDir':r'\dir'+'\\',
-	'getFileName':'file',
-	'getFileBase':'file',
+	'getDirsList':['','ufsidir'],
+	'getDirsString':r'\ufsidir'+'\\',
+	'getParentDir':r'\ufsidir'+'\\',
+	'getFileName':'ufsifile',
+	'getFileBase':'ufsifile',
 	'getFileExt':None,
 	'isAbsolute':True
 	}
 FORWARD_SLASHES_ONLY={
-	'path':r'/dir/file',
-	'str':r'\dir\file',
-	'split':(__WIN_FS_TYPE,None,None,['','dir'],'file',None),
+	'path':r'/ufsidir/ufsifile',
+	'str':r'\ufsidir\ufsifile',
+	'split':(__WIN_FS_TYPE,None,None,['','ufsidir'],'ufsifile',None),
 	'getDriveLetter':None,
-	'getDirsList':['','dir'],
-	'getDirsString':r'\dir'+'\\',
-	'getParentDir':r'\dir'+'\\',
-	'getFileName':'file',
-	'getFileBase':'file',
+	'getDirsList':['','ufsidir'],
+	'getDirsString':r'\ufsidir'+'\\',
+	'getParentDir':r'\ufsidir'+'\\',
+	'getFileName':'ufsifile',
+	'getFileBase':'ufsifile',
 	'getFileExt':None,
 	'isAbsolute':True
 	}
@@ -343,9 +343,9 @@ DRIVE_FORWARD_SLASH={
 	'isAbsolute':True
 	}
 UNC_BACK_SLASH={
-	'path':r'\\test'+'\\',
-	'str':r'\\test'+'\\',
-	'split':(__UNC_FS_TYPE,'test',None,[''],'',None),
+	'path':r'\\ufsitest'+'\\',
+	'str':r'\\ufsitest'+'\\',
+	'split':(__UNC_FS_TYPE,'ufsitest',None,[''],'',None),
 	'getDriveLetter':None,
 	'getDirsList':[''],
 	'getDirsString':'\\',
@@ -357,9 +357,9 @@ UNC_BACK_SLASH={
 	}
 # TODO: this is more flexible than a real windows UNC interpreter - is this ok?
 UNC_FORWARD_SLASH={
-	'path':r'//test/',
-	'str':r'\\test'+'\\',
-	'split':(__UNC_FS_TYPE,'test',None,[''],'',None),
+	'path':r'//ufsitest/',
+	'str':r'\\ufsitest'+'\\',
+	'split':(__UNC_FS_TYPE,'ufsitest',None,[''],'',None),
 	'getDriveLetter':None,
 	'getDirsList':[''],
 	'getDirsString':'\\',
@@ -372,17 +372,17 @@ UNC_FORWARD_SLASH={
 
 
 
-# test dirs
+# test ufsidirs
 REL_NO_DIR={
-	'path':r'file',
-	'str':r'file',
-	'split':(__WIN_FS_TYPE,None,None,[],'file',None),
+	'path':r'ufsifile',
+	'str':r'ufsifile',
+	'split':(__WIN_FS_TYPE,None,None,[],'ufsifile',None),
 	'getDriveLetter':None,
 	'getDirsList':[],
 	'getDirsString':'',
-	'getParentDir':None,
-	'getFileName':'file',
-	'getFileBase':'file',
+	'getParentDir':'',
+	'getFileName':'ufsifile',
+	'getFileBase':'ufsifile',
 	'getFileExt':None,
 	'isAbsolute':False
 	}
@@ -400,25 +400,25 @@ ABS_ONE_DIR={
 	'isAbsolute':True
 	}
 ABS_ONE_DIR_FILE={
-	'path':r'\file',
-	'str':r'\file',
-	'split':(__WIN_FS_TYPE,None,None,[''],'file',None),
+	'path':r'\ufsifile',
+	'str':r'\ufsifile',
+	'split':(__WIN_FS_TYPE,None,None,[''],'ufsifile',None),
 	'getDriveLetter':None,
 	'getDirsList':[''],
 	'getDirsString':r''+'\\',
 	'getParentDir':'\\',
-	'getFileName':'file',
-	'getFileBase':'file',
+	'getFileName':'ufsifile',
+	'getFileBase':'ufsifile',
 	'getFileExt':None,
 	'isAbsolute':True
 	}
 ABS_TWO_DIRS={
-	'path':r'\dir'+'\\',
-	'str':r'\dir'+'\\',
-	'split':(__WIN_FS_TYPE,None,None,['','dir'],'',None),
+	'path':r'\ufsidir'+'\\',
+	'str':r'\ufsidir'+'\\',
+	'split':(__WIN_FS_TYPE,None,None,['','ufsidir'],'',None),
 	'getDriveLetter':None,
-	'getDirsList':['','dir'],
-	'getDirsString':r'\dir'+'\\',
+	'getDirsList':['','ufsidir'],
+	'getDirsString':r'\ufsidir'+'\\',
 	'getParentDir':'\\',
 	'getFileName':'',
 	'getFileBase':'',
@@ -426,55 +426,55 @@ ABS_TWO_DIRS={
 	'isAbsolute':True
 	}
 ABS_TWO_DIRS_FILE={
-	'path':r'\dir\file',
-	'str':r'\dir\file',
-	'split':(__WIN_FS_TYPE,None,None,['','dir'],'file',None),
+	'path':r'\ufsidir\ufsifile',
+	'str':r'\ufsidir\ufsifile',
+	'split':(__WIN_FS_TYPE,None,None,['','ufsidir'],'ufsifile',None),
 	'getDriveLetter':None,
-	'getDirsList':['','dir'],
-	'getDirsString':r'\dir'+'\\',
-	'getParentDir':r'\dir'+'\\',
-	'getFileName':'file',
-	'getFileBase':'file',
+	'getDirsList':['','ufsidir'],
+	'getDirsString':r'\ufsidir'+'\\',
+	'getParentDir':r'\ufsidir'+'\\',
+	'getFileName':'ufsifile',
+	'getFileBase':'ufsifile',
 	'getFileExt':None,
 	'isAbsolute':True
 	}
-# TODO: apparently this dirs parent dir should be ''
+# TODO: apparently this ufsidirs parent ufsidir should be ''
 REL_ONE_DIR={
-	'path':r'dir'+'\\',
-	'str':r'dir'+'\\',
-	'split':(__WIN_FS_TYPE,None,None,['dir'],'',None),
+	'path':r'ufsidir'+'\\',
+	'str':r'ufsidir'+'\\',
+	'split':(__WIN_FS_TYPE,None,None,['ufsidir'],'',None),
 	'getDriveLetter':None,
-	'getDirsList':['dir'],
-	'getDirsString':r'dir'+'\\',
-	'getParentDir':None,
+	'getDirsList':['ufsidir'],
+	'getDirsString':r'ufsidir'+'\\',
+	'getParentDir':'',
 	'getFileName':'',
 	'getFileBase':'',
 	'getFileExt':None,
 	'isAbsolute':False
 	}
 REL_ONE_DIR_FILE={
-	'path':r'dir\file',
-	'str':r'dir\file',
-	'split':(__WIN_FS_TYPE,None,None,['dir'],'file',None),
+	'path':r'ufsidir\ufsifile',
+	'str':r'ufsidir\ufsifile',
+	'split':(__WIN_FS_TYPE,None,None,['ufsidir'],'ufsifile',None),
 	'getDriveLetter':None,
-	'getDirsList':['dir'],
-	'getDirsString':r'dir'+'\\',
-	'getParentDir':r'dir'+'\\',
-	'getFileName':'file',
-	'getFileBase':'file',
+	'getDirsList':['ufsidir'],
+	'getDirsString':r'ufsidir'+'\\',
+	'getParentDir':r'ufsidir'+'\\',
+	'getFileName':'ufsifile',
+	'getFileBase':'ufsifile',
 	'getFileExt':None,
 	'isAbsolute':False
 	}
 REL_THREE_DIRS_FILE={
-	'path':r'dir1\dir2\dir3\file',
-	'str':r'dir1\dir2\dir3\file',
-	'split':(__WIN_FS_TYPE,None,None,['dir1','dir2','dir3'],'file',None),
+	'path':r'ufsidir1\ufsidir2\ufsidir3\ufsifile',
+	'str':r'ufsidir1\ufsidir2\ufsidir3\ufsifile',
+	'split':(__WIN_FS_TYPE,None,None,['ufsidir1','ufsidir2','ufsidir3'],'ufsifile',None),
 	'getDriveLetter':None,
-	'getDirsList':['dir1','dir2','dir3'],
-	'getDirsString':r'dir1\dir2\dir3'+'\\',
-	'getParentDir':r'dir1\dir2\dir3'+'\\',
-	'getFileName':'file',
-	'getFileBase':'file',
+	'getDirsList':['ufsidir1','ufsidir2','ufsidir3'],
+	'getDirsString':r'ufsidir1\ufsidir2\ufsidir3'+'\\',
+	'getParentDir':r'ufsidir1\ufsidir2\ufsidir3'+'\\',
+	'getFileName':'ufsifile',
+	'getFileBase':'ufsifile',
 	'getFileExt':None,
 	'isAbsolute':False
 	}
@@ -482,7 +482,7 @@ REL_THREE_DIRS_FILE={
 
 
 
-# test file parts
+# test ufsifile parts
 EMPTY_FILE={
 	'path':r'',
 	'str':r'',
@@ -503,74 +503,74 @@ EXT={
 	'getDriveLetter':None,
 	'getDirsList':[],
 	'getDirsString':'',
-	'getParentDir':None,
+	'getParentDir':'',
 	'getFileName':'.ext',
 	'getFileBase':'',
 	'getFileExt':'ext',
 	'isAbsolute':False
 	}
 FILE_EXT={
-	'path':r'file.ext',
-	'str':r'file.ext',
-	'split':(__WIN_FS_TYPE,None,None,[],'file','ext'),
+	'path':r'ufsifile.ext',
+	'str':r'ufsifile.ext',
+	'split':(__WIN_FS_TYPE,None,None,[],'ufsifile','ext'),
 	'getDriveLetter':None,
 	'getDirsList':[],
 	'getDirsString':'',
-	'getParentDir':None,
-	'getFileName':'file.ext',
-	'getFileBase':'file',
+	'getParentDir':'',
+	'getFileName':'ufsifile.ext',
+	'getFileBase':'ufsifile',
 	'getFileExt':'ext',
 	'isAbsolute':False
 	}
 FILE_PERIOD={
-	'path':r'file.',
-	'str':r'file.',
-	'split':(__WIN_FS_TYPE,None,None,[],'file',''),
+	'path':r'ufsifile.',
+	'str':r'ufsifile.',
+	'split':(__WIN_FS_TYPE,None,None,[],'ufsifile',''),
 	'getDriveLetter':None,
 	'getDirsList':[],
 	'getDirsString':'',
-	'getParentDir':None,
-	'getFileName':'file.',
-	'getFileBase':'file',
+	'getParentDir':'',
+	'getFileName':'ufsifile.',
+	'getFileBase':'ufsifile',
 	'getFileExt':'',
 	'isAbsolute':False
 	}
 FILE={
-	'path':r'file',
-	'str':r'file',
-	'split':(__WIN_FS_TYPE,None,None,[],'file',None),
+	'path':r'ufsifile',
+	'str':r'ufsifile',
+	'split':(__WIN_FS_TYPE,None,None,[],'ufsifile',None),
 	'getDriveLetter':None,
 	'getDirsList':[],
 	'getDirsString':'',
-	'getParentDir':None,
-	'getFileName':'file',
-	'getFileBase':'file',
+	'getParentDir':'',
+	'getFileName':'ufsifile',
+	'getFileBase':'ufsifile',
 	'getFileExt':None,
 	'isAbsolute':False
 	}
 DIR_FILE_EXT={
-	'path':r'dir\file.ext',
-	'str':r'dir\file.ext',
-	'split':(__WIN_FS_TYPE,None,None,['dir'],'file','ext'),
+	'path':r'ufsidir\ufsifile.ext',
+	'str':r'ufsidir\ufsifile.ext',
+	'split':(__WIN_FS_TYPE,None,None,['ufsidir'],'ufsifile','ext'),
 	'getDriveLetter':None,
-	'getDirsList':['dir'],
-	'getDirsString':r'dir'+'\\',
-	'getParentDir':r'dir'+'\\',
-	'getFileName':'file.ext',
-	'getFileBase':'file',
+	'getDirsList':['ufsidir'],
+	'getDirsString':r'ufsidir'+'\\',
+	'getParentDir':r'ufsidir'+'\\',
+	'getFileName':'ufsifile.ext',
+	'getFileBase':'ufsifile',
 	'getFileExt':'ext',
 	'isAbsolute':False
 	}
 DIR_PERIOD_FILE_EXT={
-	'path':r'\dir.type\file.ext',
-	'str':r'\dir.type\file.ext',
-	'split':(__WIN_FS_TYPE,None,None,['','dir.type'],'file','ext'),
+	'path':r'\ufsidir.type\ufsifile.ext',
+	'str':r'\ufsidir.type\ufsifile.ext',
+	'split':(__WIN_FS_TYPE,None,None,['','ufsidir.type'],'ufsifile','ext'),
 	'getDriveLetter':None,
-	'getDirsList':['','dir.type'],
-	'getDirsString':r'\dir.type'+'\\',
-	'getParentDir':r'\dir.type'+'\\',
-	'getFileName':'file.ext',
-	'getFileBase':'file',
+	'getDirsList':['','ufsidir.type'],
+	'getDirsString':r'\ufsidir.type'+'\\',
+	'getParentDir':r'\ufsidir.type'+'\\',
+	'getFileName':'ufsifile.ext',
+	'getFileBase':'ufsifile',
 	'getFileExt':'ext',
 	'isAbsolute':True
 	}
@@ -581,7 +581,7 @@ def __outputTestedPaths():
 	selfModule=sys.modules[__name__]
 	del sys
 	
-	for s in filter(lambda s:not s.startswith('__'),dir(selfModule)):
+	for s in filter(lambda s:not s.startswith('__'),ufsidir(selfModule)):
 		#print s
 		d=getattr(selfModule,s)
 		print d['path']

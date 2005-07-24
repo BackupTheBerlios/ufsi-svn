@@ -5,65 +5,65 @@ del ufsi
 
 # test absolute vs relative part
 ABS={
-	'path':r'/dir/file.ext',
-	'str':r'/dir/file.ext',
-	'split':(__FS_TYPE,None,None,['','dir'],'file','ext'),
-	'getDirsList':['','dir'],
-	'getDirsString':r'/dir/',
-	'getParentDir':r'/dir/',
-	'getFileName':'file.ext',
-	'getFileBase':'file',
+	'path':r'/ufsidir/ufsifile.ext',
+	'str':r'/ufsidir/ufsifile.ext',
+	'split':(__FS_TYPE,None,None,['','ufsidir'],'ufsifile','ext'),
+	'getDirsList':['','ufsidir'],
+	'getDirsString':r'/ufsidir/',
+	'getParentDir':r'/ufsidir/',
+	'getFileName':'ufsifile.ext',
+	'getFileBase':'ufsifile',
 	'getFileExt':'ext',
 	'isAbsolute':True
 	}
 ABS_HOME={
-	'path':r'~/dir/file.ext',
-	'str':r'~/dir/file.ext',
-	'split':(__FS_TYPE,None,None,['~','dir'],'file','ext'),
-	'getDirsList':['~','dir'],
-	'getDirsString':r'~/dir/',
-	'getParentDir':r'~/dir/',
-	'getFileName':'file.ext',
-	'getFileBase':'file',
+	'path':r'~/ufsidir/ufsifile.ext',
+	'str':r'~/ufsidir/ufsifile.ext',
+	'split':(__FS_TYPE,None,None,['~','ufsidir'],'ufsifile','ext'),
+	'getDirsList':['~','ufsidir'],
+	'getDirsString':r'~/ufsidir/',
+	'getParentDir':r'~/ufsidir/',
+	'getFileName':'ufsifile.ext',
+	'getFileBase':'ufsifile',
 	'getFileExt':'ext',
 	'isAbsolute':True
 	}
 ABS_USER={
-	'path':r'~root/dir/file.ext',
-	'str':r'~root/dir/file.ext',
-	'split':(__FS_TYPE,None,None,['~root','dir'],'file','ext'),
-	'getDirsList':['~root','dir'],
-	'getDirsString':r'~root/dir/',
-	'getParentDir':r'~root/dir/',
-	'getFileName':'file.ext',
-	'getFileBase':'file',
+	'path':r'~root/ufsidir/ufsifile.ext',
+	'str':r'~root/ufsidir/ufsifile.ext',
+	'split':(__FS_TYPE,None,None,['~root','ufsidir'],'ufsifile','ext'),
+	'getDirsList':['~root','ufsidir'],
+	'getDirsString':r'~root/ufsidir/',
+	'getParentDir':r'~root/ufsidir/',
+	'getFileName':'ufsifile.ext',
+	'getFileBase':'ufsifile',
 	'getFileExt':'ext',
 	'isAbsolute':True
 	}
 REL={
-	'path':r'dir/file.ext',
-	'str':r'dir/file.ext',
-	'split':(__FS_TYPE,None,None,['dir'],'file','ext'),
-	'getDirsList':['dir'],
-	'getDirsString':r'dir/',
-	'getParentDir':r'dir/',
-	'getFileName':'file.ext',
-	'getFileBase':'file',
+	'path':r'ufsidir/ufsifile.ext',
+	'str':r'ufsidir/ufsifile.ext',
+	'split':(__FS_TYPE,None,None,['ufsidir'],'ufsifile','ext'),
+	'getDirsList':['ufsidir'],
+	'getDirsString':r'ufsidir/',
+	'getParentDir':r'ufsidir/',
+	'getFileName':'ufsifile.ext',
+	'getFileBase':'ufsifile',
 	'getFileExt':'ext',
 	'isAbsolute':False
 	}
 
 
-# test dirs
+# test ufsidirs
 REL_NO_DIR={
-	'path':r'file',
-	'str':r'file',
-	'split':(__FS_TYPE,None,None,[],'file',None),
+	'path':r'ufsifile',
+	'str':r'ufsifile',
+	'split':(__FS_TYPE,None,None,[],'ufsifile',None),
 	'getDirsList':[],
 	'getDirsString':r'',
-	'getParentDir':None,
-	'getFileName':'file',
-	'getFileBase':'file',
+	'getParentDir':'',
+	'getFileName':'ufsifile',
+	'getFileBase':'ufsifile',
 	'getFileExt':None,
 	'isAbsolute':False
 	}
@@ -80,23 +80,23 @@ ABS_ONE_DIR={
 	'isAbsolute':True
 	}
 ABS_ONE_DIR_FILE={
-	'path':r'/file',
-	'str':r'/file',
-	'split':(__FS_TYPE,None,None,[''],'file',None),
+	'path':r'/ufsifile',
+	'str':r'/ufsifile',
+	'split':(__FS_TYPE,None,None,[''],'ufsifile',None),
 	'getDirsList':[''],
 	'getDirsString':r'/',
 	'getParentDir':r'/',
-	'getFileName':'file',
-	'getFileBase':'file',
+	'getFileName':'ufsifile',
+	'getFileBase':'ufsifile',
 	'getFileExt':None,
 	'isAbsolute':True
 	}
 ABS_TWO_DIRS={
-	'path':r'/dir/',
-	'str':r'/dir/',
-	'split':(__FS_TYPE,None,None,['','dir'],'',None),
-	'getDirsList':['','dir'],
-	'getDirsString':r'/dir/',
+	'path':r'/ufsidir/',
+	'str':r'/ufsidir/',
+	'split':(__FS_TYPE,None,None,['','ufsidir'],'',None),
+	'getDirsList':['','ufsidir'],
+	'getDirsString':r'/ufsidir/',
 	'getParentDir':r'/',
 	'getFileName':'',
 	'getFileBase':'',
@@ -104,23 +104,23 @@ ABS_TWO_DIRS={
 	'isAbsolute':True
 	}
 ABS_TWO_DIRS_FILE={
-	'path':r'/dir/file',
-	'str':r'/dir/file',
-	'split':(__FS_TYPE,None,None,['','dir'],'file',None),
-	'getDirsList':['','dir'],
-	'getDirsString':r'/dir/',
-	'getParentDir':r'/dir/',
-	'getFileName':'file',
-	'getFileBase':'file',
+	'path':r'/ufsidir/ufsifile',
+	'str':r'/ufsidir/ufsifile',
+	'split':(__FS_TYPE,None,None,['','ufsidir'],'ufsifile',None),
+	'getDirsList':['','ufsidir'],
+	'getDirsString':r'/ufsidir/',
+	'getParentDir':r'/ufsidir/',
+	'getFileName':'ufsifile',
+	'getFileBase':'ufsifile',
 	'getFileExt':None,
 	'isAbsolute':True
 	}
 REL_ONE_DIR={
-	'path':r'dir/',
-	'str':r'dir/',
-	'split':(__FS_TYPE,None,None,['dir'],'',None),
-	'getDirsList':['dir'],
-	'getDirsString':r'dir/',
+	'path':r'ufsidir/',
+	'str':r'ufsidir/',
+	'split':(__FS_TYPE,None,None,['ufsidir'],'',None),
+	'getDirsList':['ufsidir'],
+	'getDirsString':r'ufsidir/',
 	'getParentDir':r'',
 	'getFileName':'',
 	'getFileBase':'',
@@ -128,32 +128,32 @@ REL_ONE_DIR={
 	'isAbsolute':False
 	}
 REL_ONE_DIR_FILE={
-	'path':r'dir/file',
-	'str':r'dir/file',
-	'split':(__FS_TYPE,None,None,['dir'],'file',None),
-	'getDirsList':['dir'],
-	'getDirsString':r'dir/',
-	'getParentDir':r'dir/',
-	'getFileName':'file',
-	'getFileBase':'file',
+	'path':r'ufsidir/ufsifile',
+	'str':r'ufsidir/ufsifile',
+	'split':(__FS_TYPE,None,None,['ufsidir'],'ufsifile',None),
+	'getDirsList':['ufsidir'],
+	'getDirsString':r'ufsidir/',
+	'getParentDir':r'ufsidir/',
+	'getFileName':'ufsifile',
+	'getFileBase':'ufsifile',
 	'getFileExt':None,
 	'isAbsolute':False
 	}
 REL_THREE_DIRS_FILE={
-	'path':r'dir1/dir2/dir3/file',
-	'str':r'dir1/dir2/dir3/file',
-	'split':(__FS_TYPE,None,None,['dir1','dir2','dir3'],'file',None),
-	'getDirsList':['dir1','dir2','dir3'],
-	'getDirsString':r'dir1/dir2/dir3/',
-	'getParentDir':r'dir1/dir2/dir3/',
-	'getFileName':'file',
-	'getFileBase':'file',
+	'path':r'ufsidir1/ufsidir2/ufsidir3/ufsifile',
+	'str':r'ufsidir1/ufsidir2/ufsidir3/ufsifile',
+	'split':(__FS_TYPE,None,None,['ufsidir1','ufsidir2','ufsidir3'],'ufsifile',None),
+	'getDirsList':['ufsidir1','ufsidir2','ufsidir3'],
+	'getDirsString':r'ufsidir1/ufsidir2/ufsidir3/',
+	'getParentDir':r'ufsidir1/ufsidir2/ufsidir3/',
+	'getFileName':'ufsifile',
+	'getFileBase':'ufsifile',
 	'getFileExt':None,
 	'isAbsolute':False
 	}
 
 
-# test file parts
+# test ufsifile parts
 EMPTY_FILE={
 	'path':r'',
 	'str':r'',
@@ -172,71 +172,71 @@ EXT={
 	'split':(__FS_TYPE,None,None,[],'','ext'),
 	'getDirsList':[],
 	'getDirsString':r'',
-	'getParentDir':None,
+	'getParentDir':'',
 	'getFileName':'.ext',
 	'getFileBase':'',
 	'getFileExt':'ext',
 	'isAbsolute':False
 	}
 FILE_EXT={
-	'path':r'file.ext',
-	'str':r'file.ext',
-	'split':(__FS_TYPE,None,None,[],'file','ext'),
+	'path':r'ufsifile.ext',
+	'str':r'ufsifile.ext',
+	'split':(__FS_TYPE,None,None,[],'ufsifile','ext'),
 	'getDirsList':[],
 	'getDirsString':r'',
-	'getParentDir':None,
-	'getFileName':'file.ext',
-	'getFileBase':'file',
+	'getParentDir':'',
+	'getFileName':'ufsifile.ext',
+	'getFileBase':'ufsifile',
 	'getFileExt':'ext',
 	'isAbsolute':False
 	}
 FILE_PERIOD={
-	'path':r'file.',
-	'str':r'file.',
-	'split':(__FS_TYPE,None,None,[],'file',''),
+	'path':r'ufsifile.',
+	'str':r'ufsifile.',
+	'split':(__FS_TYPE,None,None,[],'ufsifile',''),
 	'getDirsList':[],
 	'getDirsString':r'',
-	'getParentDir':None,
-	'getFileName':'file.',
-	'getFileBase':'file',
+	'getParentDir':'',
+	'getFileName':'ufsifile.',
+	'getFileBase':'ufsifile',
 	'getFileExt':'',
 	'isAbsolute':False
 	}
 FILE={
-	'path':r'file',
-	'str':r'file',
-	'split':(__FS_TYPE,None,None,[],'file',None),
+	'path':r'ufsifile',
+	'str':r'ufsifile',
+	'split':(__FS_TYPE,None,None,[],'ufsifile',None),
 	'getDirsList':[],
 	'getDirsString':r'',
-	'getParentDir':None,
-	'getFileName':'file',
-	'getFileBase':'file',
+	'getParentDir':'',
+	'getFileName':'ufsifile',
+	'getFileBase':'ufsifile',
 	'getFileExt':None,
 	'isAbsolute':False
 	}
 DIR_FILE_EXT={
-	'path':r'dir/file.ext',
-	'str':r'dir/file.ext',
-	'split':(__FS_TYPE,None,None,['dir'],'file','ext'),
+	'path':r'ufsidir/ufsifile.ext',
+	'str':r'ufsidir/ufsifile.ext',
+	'split':(__FS_TYPE,None,None,['ufsidir'],'ufsifile','ext'),
 	'getDriveLetter':None,
-	'getDirsList':['dir'],
-	'getDirsString':r'dir/',
-	'getParentDir':r'dir/',
-	'getFileName':'file.ext',
-	'getFileBase':'file',
+	'getDirsList':['ufsidir'],
+	'getDirsString':r'ufsidir/',
+	'getParentDir':r'ufsidir/',
+	'getFileName':'ufsifile.ext',
+	'getFileBase':'ufsifile',
 	'getFileExt':'ext',
 	'isAbsolute':False
 	}
 DIR_PERIOD_FILE_EXT={
-	'path':r'/dir.type/file.ext',
-	'str':r'/dir.type/file.ext',
-	'split':(__FS_TYPE,None,None,['','dir.type'],'file','ext'),
+	'path':r'/ufsidir.type/ufsifile.ext',
+	'str':r'/ufsidir.type/ufsifile.ext',
+	'split':(__FS_TYPE,None,None,['','ufsidir.type'],'ufsifile','ext'),
 	'getDriveLetter':None,
-	'getDirsList':['','dir.type'],
-	'getDirsString':r'/dir.type/',
-	'getParentDir':r'/dir.type/',
-	'getFileName':'file.ext',
-	'getFileBase':'file',
+	'getDirsList':['','ufsidir.type'],
+	'getDirsString':r'/ufsidir.type/',
+	'getParentDir':r'/ufsidir.type/',
+	'getFileName':'ufsifile.ext',
+	'getFileBase':'ufsifile',
 	'getFileExt':'ext',
 	'isAbsolute':True
 	}
@@ -248,7 +248,7 @@ def __outputTestedPaths():
 	selfModule=sys.modules[__name__]
 	del sys
 	
-	for s in filter(lambda s:not s.startswith('__'),dir(selfModule)):
+	for s in filter(lambda s:not s.startswith('__'),ufsidir(selfModule)):
 		#print s
 		d=getattr(selfModule,s)
 		print d['path']
