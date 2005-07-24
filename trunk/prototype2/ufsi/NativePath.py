@@ -131,7 +131,9 @@ class AbstractNativePath(Path.PathInterface):
 		
 	def _dirListToDirString(self,dirs):
 		return ''.join([d+self.getSeparator() for d in dirs])
-		
+
+
+
 
 class NativeUnixPath(AbstractNativePath):
 	def split(self):
@@ -163,9 +165,10 @@ class NativeUnixPath(AbstractNativePath):
 		dirs=self.getDirsList()
 		fileName=self.getFileName()
 
-		# if it's a relative path and no dirs found,
-		# or it's an absolute path but only the '' dir (ie. '/' path) and no fileName
-		if len(dirs)==0 or (len(dirs)==1 and dirs[0]=='' and fileName==''):
+		# if no filename and:
+		# 	if it's a relative path and no dirs found,
+		# 	or it's an absolute path but only the '' dir (ie. '\' path)
+		if fileName=='' and (len(dirs)==0 or (len(dirs)==1 and dirs[0]=='')):
 			# then it has no parent dir
 			return None
 
@@ -179,7 +182,6 @@ class NativeUnixPath(AbstractNativePath):
 	def getSeparator(self):
 		return '/'
 
-	
 
 	def isAbsolute(self):
 		absolute=False
@@ -241,16 +243,14 @@ class NativeWindowsPath(AbstractNativePath):
 
 
 	def getParentDirPath(self):
-		"""
-		TODO: What is the parent dir of 'file' or 'dir/'? Is it '' or is it None?
-		"""
-		s=self.split()
-		dirs=s[3]
-		fileName=s[4]
+		fsType=self.getFileSystemType()
+		dirs=self.getDirsList()
+		fileName=self.getFileName()
 
-		# if it's a relative path and no dirs found,
-		# or it's an absolute path but only the '' dir (ie. '\' path) and no fileName
-		if len(dirs)==0 or (len(dirs)==1 and dirs[0]=='' and fileName==''):
+		# if no filename and:
+		# 	if it's a relative path and no dirs found,
+		# 	or it's an absolute path but only the '' dir (ie. '\' path)
+		if fileName=='' and (len(dirs)==0 or (len(dirs)==1 and dirs[0]=='')):
 			# then it has no parent dir
 			return None
 
@@ -261,8 +261,8 @@ class NativeWindowsPath(AbstractNativePath):
 		parentDirs=self._dirListToDirString(dirs)
 
 		# are we UNC?
-		if s[0]==FILE_SYSTEM_TYPE__NATIVE_UNC:
-			return NativeWindowsPath('\\'+'\\'+s[1]+parentDirs)
+		if fsType==FILE_SYSTEM_TYPE__NATIVE_UNC:
+			return NativeWindowsPath('\\'+'\\'+self.getHost()+parentDirs)
 		else:
 			d=self.getDriveLetter()
 			if d!=None: d+=':'
