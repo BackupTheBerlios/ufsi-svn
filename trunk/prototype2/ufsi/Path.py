@@ -78,7 +78,7 @@ class PathInterface:
 
 	def split(self):
 		"""
-		Splits this path into a tuple of (FSType, host, portNumber, [dirs], fileBase, fileExt]).
+		<p>Splits this path into a tuple of (FSType, host, portNumber, [dirs], fileBase, fileExt]).</p>
 		
 		<ul>
 			<li>FSType is the protocol name for any url style file systems, or:
@@ -105,8 +105,21 @@ class PathInterface:
 
 	def getParentDirPath(self):
 		"""
-		Returns a path object referencing the parent directory of the directory or file that this
-		path references.
+		<p>Returns a path object referencing the parent directory of the directory or file that this
+		path references.</p>
+		
+		<ul>
+			<li>A file's parent directory is the directory that contains it:<br/>
+				eg. 'dir/file' has a parent directory of 'dir/'.</li>
+			<li>A dir's parent directory is the directory that contains it:<br/>
+				eg. 'dir1/dir2/' has a parent directory of 'dir1'.</li>
+			<li>The path '' is a valid directory path. It is a relative path that
+				points to the current working directory.<br/>
+				eg. 'dir/' has a parent directory of '', and 'file' also has a parent directory of ''.</li>
+			<li>Naturally the path '/' doesn't have a parent directory and should instead return None.
+				This is the case for any absolute path. Eg. 'http://www.example.com/' doesn't have a
+				parent directory.</li>
+		</ul>
 		"""
 		raise NotImplementedError
 	
