@@ -22,6 +22,8 @@ class TestNativeUnixPath(unittest.TestCase):
 		
 		# initialise a counter of the total number of tests being executed
 		self.executedTests=0
+		
+		# TODO: test isDir, isFile, isSymlink methods. test getDir, getFile methods
 
 	#def tearDown(self):
 		#print "%i tests executed"%(self.executedTests)
