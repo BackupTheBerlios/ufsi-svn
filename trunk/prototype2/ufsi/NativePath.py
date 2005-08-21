@@ -69,10 +69,10 @@ class AbstractNativePath(Path.PathInterface):
 
 
 	def getDir(self):
-		pass
+		return ufsi.NativeDir(self)
 	
 	def getFile(self):
-		pass
+		return ufsi.NativeFile(self)
 
 
 	def join(self,path):
