@@ -1,0 +1,34 @@
+===============================================
+Universal File System Interface Error Heirarchy
+===============================================
+
+All UFSI errors must take a string ``message`` and an optional
+``causedBy`` exception object. They must all implement the __str__
+method and a getCausedBy method to return the causedBy exception.
+
+
+* Error - base class for all UFSI errors
+
+  - InvalidPathError - give path and type that path was thought to be
+    a reason why it doesn't match would be ideal
+
+  - UnsupportedOperationError - raised when an operation cannot be
+    performed on the specified file system.
+
+  - AuthorisationError - base class for authorisation related errors
+
+    + AuthorisationRequiredError - raised when a method requires some
+      form of authorisation to perform a request.
+
+    + AuthorisationInvalidError - raised when the authentication
+      provided is rejected as invalid
+
+  - IOError - base class for io errors
+
+    + PathNotFoundError - when a path (file or dir doesn't exist on
+      the file system
+
+    + EOFError - end of the file
+
+    + TimeoutError - for when a request times out
+

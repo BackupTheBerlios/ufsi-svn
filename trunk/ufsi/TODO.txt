@@ -1,0 +1,55 @@
+====
+TODO
+====
+
+Entire Package
+--------------
+
+* docstrings
+* docstring to html help (seems it's best to do via tex)
+* test data
+* unit test classes
+* a standard for the returned stat dictionary
+* add copyright information to all of the files
+* add subversion tags to all files (where appropriate)
+
+
+Extra Dir Methods
+~~~~~~~~~~~~~~~~~
+
+* move method
+* copy method
+* create method
+* remove method
+* rename method?
+* walk method
+
+
+Extra File Methods
+~~~~~~~~~~~~~~~~~~
+
+* move
+* copy
+* remove
+* rename
+
+
+Native
+------
+
+
+Http
+----
+
+* implement symlink related methods
+
+
+Ftp
+---
+
+* support authentication
+
+
+Tar
+---
+

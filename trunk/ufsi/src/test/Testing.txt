@@ -1,0 +1,133 @@
+===========================================
+Testing the Universal File System Interface
+===========================================
+
+Unit Tests
+==========
+
+Unit tests should be performed on all methods except accessors and
+mutators. Constructors only need to be tested if they perform some
+processing and they can then be tested by using the available
+accessors of the object.
+
+NativeLinuxPath
+---------------
+
+split()
+.......
+
+a. Empty path ('')
+b. FileBase only ('filebase')
+c. FileExt only ('.ext')
+d. FileBase with empty fileExt ('filebase.')
+e. Full fileName ('filebase.ext')
+f. Single dir ('dir/')
+g. Two dirs ('dir1/dir2/')
+h. Absolute path, two dirs, full fileName ('/dir1/dir2/filebase.ext')
+i. Dir with a period ('/dir1.dirext/filebase.fileext')
+
+TODO: add home dir ('~/...') and user dir ('~user/...') tests
+
+
+join()
+......
+
+a. Append a relative path ('/dir1/', 'dir2/filebase.ext')
+b. Append an absolute path ('/dir1/', '/dir2/filebase.ext')
+c. Append to a path not terminated by a separator character
+   ('dir1', 'dir2/filebase.ext')
+d. Append an empty path ('dir1', '')
+e. Append a non-native url
+   ('/dir1/', 'http://www.example.com/dir/file.ext')
+
+
+
+isAbsolute()
+............
+
+a. Relative path ('dir/filebase.ext')
+b. Absolute root path ('/dir/filebase.ext')
+c. Absolute home directory based path ('~/filebase.ext')
+d. Absolute user directory based path ('~ufsiuser/filebase.ext')
+
+
+isDir()
+.......
+
+a. Existing directory ('dir/')
+b. Existing directory without a trailing slash ('dir')
+c. Existing dir referenced through a symlink ('dirsymlink/' (links to 'dir'))
+d. Existing file ('filebase.ext')
+e. Non-existent directory ('nondir/)
+
+
+isFile()
+........
+
+a. Existing file ('filebase.ext')
+b. Existing file in a directory ('dir/filebase.ext')
+c. Existing file referenced through a symlink ('filesymlink' (links to
+   'filebase.ext'))
+d. Non-existent file ('nonfile.ext')
+
+
+isSymlink()
+...........
+
+a. Existing symlink to a file ('filesymlink')
+b. Existing symlink to a dir ('dirsymlink')
+c. Existing file ('filebase.ext')
+d. Existing dir ('dir/')
+e. Non-existent symlink ('nonsymlink')
+
+
+getDir()
+........
+
+a. Check type for existing dir ('dir')
+b. Check type for non-existent dir ('nondir')
+
+
+getFile()
+.........
+
+a. Check type for existing file ('filebase.ext')
+b. Check type for non-existent file ('nonfile.ext')
+
+
+getSymlinkPath()
+................
+
+a. Existing symlink to a file ('filesymlink')
+b. Existing symlink to a dir ('dirsymlink')
+c. Existing file ('filebase.ext')
+d. Existing dir ('dir/')
+e. Non-existing symlink ('nonsymlink')
+
+
+HttpPath
+--------
+
+
+Integration Tests
+=================
+
+AbstractUrlPath()
+-----------------
+
+NativePath()
+------------
+
+Path()
+------
+
+getFile()
+---------
+
+getDir()
+--------
+
+getSymlinkPath()
+----------------
+
+
