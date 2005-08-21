@@ -21,7 +21,8 @@ class TestNativeWindowsPath(unittest.TestCase):
 		# initialise a counter of the total number of tests being executed
 		self.executedTests=0
 
-		# TODO: test isDir, isFile, isSymlink methods. test getDir, getFile methods
+		# TODO: standard methods: test isDir, isFile, isSymlink methods. 
+		# slightly special methods: test getDir, getFile methods
 
 	#def tearDown(self):
 		#print "%i tests executed"%(self.executedTests)
