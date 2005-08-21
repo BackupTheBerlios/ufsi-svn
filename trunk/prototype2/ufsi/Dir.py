@@ -98,6 +98,7 @@ class DirInterface:
 	# =============================================
 	# Walk through the file system tree
 	# =============================================
+	# TODO: change this to reflect normal os.walk functionality - hint: os functions are decent and accepted as good - replicate on other fs
 	def walkAll(self,function,topDown=False,followSymLinks=False):
 		"""
 		"""
