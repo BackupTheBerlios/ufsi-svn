@@ -10,6 +10,7 @@ Therefore every transaction requires a separate connection (atm).
 
 import ufsi
 
+# TODO: experiment with urllib2 support.
 import urllib2
 
 
@@ -32,13 +33,34 @@ class FtpFile(ufsi.FileInterface):
             # open now
             # TODO: add use of authentication
             self.__ftpObject=ftplib.FTP(host)
-            
+
+            # read file into a buffer
+            # close ftp connection
         else:
             # test for ability to create now and open and write on close
             pass
 
 
-
-
-    def write(self):
+    def read(self,size=None):
         pass
+
+    def write(self,s):
+        pass
+
+    def writeLines(self,lines):
+        pass
+
+    def close(self):
+        # if read mode, remove read buffer
+        # if write mode, open ftp conn, write file, close ftp, remove
+        # write buffer.
+        pass
+
+    def getStat(self):
+        pass
+
+    def getPath(self):
+        """
+        Returns a Path object for this file.
+        """
+        return self.__path
