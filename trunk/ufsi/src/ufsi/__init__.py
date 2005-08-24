@@ -16,6 +16,7 @@ from DirInterface import DirInterface
 from Errors \
 import Error, \
        InvalidPathError, \
+       UnsupportedOperationError, \
        AuthorisationError, \
        AuthorisationRequiredError, \
        AuthorisationInvalidError, \
@@ -33,6 +34,7 @@ from NativeDir import NativeDir
 from HttpPath import HttpPath
 from HttpFile import HttpFile
 
+from FtpFile import FtpFile
 
 
 def Path(path):
