@@ -15,18 +15,21 @@ method and a getCausedBy method to return the causedBy exception.
   - UnsupportedOperationError - raised when an operation cannot be
     performed on the specified file system.
 
-  - AuthorisationError - base class for authorisation related errors
+  - AuthenticationError - base class for authorisation related errors
 
-    + AuthorisationRequiredError - raised when a method requires some
+    + AuthenticationRequiredError - raised when a method requires some
       form of authorisation to perform a request.
 
-    + AuthorisationInvalidError - raised when the authentication
-      provided is rejected as invalid
+    + AuthenticationInvalidError - raised when the authentication
+      provided is rejected as invalid.
+
+    + UnsupportedAuthenticationError - raised when an authentication
+      object was provided, but the file system doesn't support it.
 
   - IOError - base class for io errors
 
-    + PathNotFoundError - when a path (file or dir doesn't exist on
-      the file system
+    + PathNotFoundError - when a path (file or dir) doesn't exist on
+      the file system.
 
     + EOFError - end of the file
 
