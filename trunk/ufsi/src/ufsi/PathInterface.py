@@ -11,13 +11,15 @@ functions that are performable on a path.
 
 Path object constraints and conditions:
  * All Path objects are immutable.
- * If authorisation is required to execute a specified method, but it
-   hasn't been provided (see: setAuthorisation()) an
-   AuthorisationError should be thrown.
+ * If authentication is required to execute a specified method, but it
+   hasn't been provided (see: setAuthentication()) an
+   AuthenticationError should be thrown.
+
+TODO: these two points contradict each other...
 
 Definitions:
-*Authorisation object*
-  an instance (child) of ufsi.AuthorisationInterface
+*Authentication object*
+  an instance (child) of ufsi.AuthentictionInterface
 
 *Dir object*
   an instance (child) of ufsi.DirInterface
@@ -166,32 +168,32 @@ class PathInterface:
         raise NotImplementedError
 
 
-    def setAuthorisation(self,auth):
+    def setAuthentication(self,auth):
         """
-        Sets the authorisation object for this Path object and any
-        derived objects that would require authorisation information.
+        Sets the authentication object for this Path object and any
+        derived objects that would require authentication information.
 
         Preconditions:
          * None
 
         Postconditions:
-         * Any methods that might require authorisation now have an
-           authorisation object that can provide authorisation
+         * Any methods that might require authentication now have an
+           authorisation object that can provide authentication
            information to the file system being accessed.
 
         """
         raise NotImplementedError
 
-    def getAuthorisation(self):
+    def getAuthentication(self):
         """
-        Returns the previously set authorisation object.
+        Returns the previously set authentication object.
 
         Preconditions:
          * None
 
         Postconditions:
-         * Returns an authorisation object, or ``None`` if an
-           authorisation object hasn't been set yet.
+         * Returns an authentication object, or ``None`` if an
+           authentication object hasn't been set yet.
         """
         raise NotImplementedError
         
@@ -266,9 +268,7 @@ class PathInterface:
          * None
 
         Postconditions:
-         * A File object is returned. If this Path object has been
-           given an Authorisation object the File object is also given
-           the Authorisation object.
+         * A File object is returned.
 
         """
         raise NotImplementedError
@@ -284,9 +284,7 @@ class PathInterface:
          * None
 
         Postconditions:
-         * A Dir object is returned. If this Path object has been
-           given an Authorisation object the Dir object is also given
-           the Authorisation object.
+         * A Dir object is returned.
 
         """
         raise NotImplementedError
@@ -303,16 +301,16 @@ class PathInterface:
         Postconditions:
          * Result is a Path object that refers to the item that the
            symlinks points to. If this Path object has been given an
-           Authorisation object and the symlink path is on the same
+           Authentication object and the symlink path is on the same
            server, the resulting Path object is also given this
-           Authorisation object.
+           Authentication object.
         
         """
         raise NotImplementedError
         
 
     """
-    Additional methods to be added later:
+    TODO: Additional methods to be added later:
      * getFileName
      * getFileBase
      * getDirsList
