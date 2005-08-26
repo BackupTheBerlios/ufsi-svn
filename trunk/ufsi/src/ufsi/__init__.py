@@ -17,14 +17,18 @@ from Errors \
 import Error, \
        InvalidPathError, \
        UnsupportedOperationError, \
-       AuthorisationError, \
-       AuthorisationRequiredError, \
-       AuthorisationInvalidError, \
+       AuthenticationError, \
+       AuthenticationRequiredError, \
+       AuthenticationInvalidError, \
+       UnsupportedAuthenticationError, \
        IOError, \
        PathNotFoundError, \
        EOFError, \
        TimeoutError
 
+# import UFSI abstractions
+from AbstractNativePath import AbstractNativePath
+from AbstractUrlPath import AbstractUrlPath
 
 # import UFSI implementations
 from NativePath import NativePath
@@ -34,7 +38,9 @@ from NativeDir import NativeDir
 from HttpPath import HttpPath
 from HttpFile import HttpFile
 
+from FtpPath import FtpPath
 from FtpFile import FtpFile
+
 
 
 def Path(path):
