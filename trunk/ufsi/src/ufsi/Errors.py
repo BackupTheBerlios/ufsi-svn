@@ -32,13 +32,28 @@ class UnsupportedOperationError(Error):
 
 
 
-class AuthorisationError(Error):
+class AuthenticationError(Error):
     pass
 
-class AuthorisationRequiredError(AuthorisationError):
+class AuthenticationRequiredError(AuthenticationError):
+    """
+    Raised when the file system requires some form of authorisation
+    but none was provided.
+    """
     pass
 
-class AuthorisationInvalidError(AuthorisationError):
+class AuthenticationInvalidError(AuthenticationError):
+    """
+    Raised when the authentication provided was rejected by the file
+    system.
+    """
+    pass
+
+class UnsupportedAuthenticationError(AuthenticationError):
+    """
+    Raised when a form of authentication was provided that the specific
+    file system doesn't support.
+    """
     pass
 
 
