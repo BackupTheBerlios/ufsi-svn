@@ -41,9 +41,14 @@ class NativeUnixPath(ufsi.AbstractNativePath):
             return self.__split.copy()
 
         # else split it and cache it
-        (head,tail)=os.path.split(self.__path)
-        dirs=head.split('/')
-        (fileBase,fileExt)=os.path.splitext(tail)
+        dirs=self._path.split('/')
+        fileName=dirs.pop()
+
+        fileParts=fileName.rsplit('.',1)
+        fileExt=None
+        if len(fileParts)>1:
+            fileExt=fileParts[1]
+        fileBase=fileParts[0]
 
         d={}
         d['protocol']='NativePath'
@@ -52,7 +57,7 @@ class NativeUnixPath(ufsi.AbstractNativePath):
         d['fileExt']=fileExt
 
         self.__split=d
-        return d
+        return d.copy()
 
 
     def getSeparator(self):
