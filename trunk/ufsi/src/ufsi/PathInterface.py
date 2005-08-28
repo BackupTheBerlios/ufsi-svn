@@ -83,15 +83,15 @@ class PathInterface:
               of 'NativeWindowsDrivePath'.
             + A windows UNC based path should have a protocol type of
               'NativeWindowsUNCPath'.
-         * hostname - the name (or ip address) of the computer on
-           which the file system resides.
+         * host - the name (or ip address) of the computer on which
+           the file system resides.
          * port - the port number used to connect to the file system,
            or undefined if the default port number should be used.
          * dirs - a list of directory names, or an empty list if no
            directories were given.
-         * filebase - the part of the filename before the last period
+         * fileBase - the part of the filename before the last period
            character.
-         * fileext - the part of the filename after the last period
+         * fileExt - the part of the filename after the last period
            character.
 
         Note: Since Path objects are immutable, this method should be
@@ -106,10 +106,10 @@ class PathInterface:
            that are specific to a certain file system type. For
            example, a windows path should also define 'drive' if the
            path contains a drive letter specification.
-         * The only required parts are protocol, dirs and filebase
+         * The only required parts are protocol, dirs and fileBase
            since a path should always be able to define these things
            even if it happens to be an empty dir list and a ''
-           filebase.
+           filebase. TODO: a filebase may not always be present FTPUrl
            
         """
         raise NotImplementedError
@@ -254,6 +254,7 @@ class PathInterface:
            met.
         
         """
+        # TODO: should it actually just be called link? More generic.
         raise NotImplementedError
         
 
@@ -292,8 +293,8 @@ class PathInterface:
     def getSymlinkPath(self):
         """
         Returns a Path object that is the path to the item referred to
-        by the symlink. If necessary, the resulting Path object should
-        be based on the path of this Path object. 
+        by the symlink. This path should be the same path as the
+        symlink and must not be joined onto this path. 
 
         Preconditions:
          * self.isSymlink()==True
@@ -302,12 +303,12 @@ class PathInterface:
          * Result is a Path object that refers to the item that the
            symlinks points to. If this Path object has been given an
            Authentication object and the symlink path is on the same
-           server, the resulting Path object is also given this
+           file system, the resulting Path object is also given this
            Authentication object.
         
         """
         raise NotImplementedError
-        
+
 
     """
     TODO: Additional methods to be added later:
