@@ -4,6 +4,7 @@ An ``ufsi.DirInterface`` implementation for native file systems.
 """
 
 import ufsi
+import NativeUtils
 
 import os
 
@@ -35,16 +36,22 @@ class NativeDir(ufsi.DirInterface):
         Returns a list of strings? or Path's that exist in this
         directory. 
         """
-        # TODO: implement re filtering
-        return map(ufsi.Path,os.listdir(self.__pathStr))
+        try:
+            # TODO: implement re filtering
+            return os.listdir(self.__pathStr)
+        except Exception,e:
+            NativeUtils.handleException(e,self.__pathStr)
 
 
     def getStat(self):
         """
         Returns a dict of information about this directory.
         """
-        # TODO: return a dict
-        return os.stat(self.__pathStr)
+        try:
+            return NativeUtils.convertStatObjectToDict(
+                    os.stat(self.__pathStr))
+        except Exception,e:
+            NativeUtils.handleException(e,self.__pathStr)
 
 
     def getPath(self):

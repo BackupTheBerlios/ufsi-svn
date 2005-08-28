@@ -4,8 +4,10 @@ An ``ufsi.FileInterface`` implementation for native file systems.
 """
 
 import ufsi
+import NativeUtils
 
 import os
+
 
 class NativeFile(ufsi.FileInterface):
     """
@@ -39,10 +41,13 @@ class NativeFile(ufsi.FileInterface):
         # TODO: change the default mode from None to 'r'
         self.close()
 
-        if mode is None:
-            self.__fileHandle=file(self.__pathStr)
-        else:
-            self.__fileHandle=file(self.__pathStr,mode)
+        try:
+            if mode is None:
+                self.__fileHandle=file(self.__pathStr)
+            else:
+                self.__fileHandle=file(self.__pathStr,mode)
+        except Exception,e:
+            NativeUtils.handleException(e,self.__pathStr)
 
     def read(self,size=None):
         """
@@ -121,8 +126,12 @@ class NativeFile(ufsi.FileInterface):
         * permissions - a string of the octal unix permissions.
         
         """
-        # TODO: fix this to return a dict and update docstring
-        return os.stat(self.__pathStr)
+        # TODO: update docstring
+        try:
+            return NativeUtils.convertStatObjectToDict(
+                    os.stat(self.__pathStr))
+        except Exception,e:
+            NativeUtils.handleException(e,self.__pathStr)
 
 
     def getPath(self):
