@@ -1,8 +1,10 @@
 """
+
 """
 
 
 import ufsi
+import NativeUtils
 
 import os
 
@@ -32,8 +34,22 @@ class AbstractNativePath(ufsi.PathInterface):
         Path object. ``other`` must be a string or a Path object.
         """
         # TODO: should we take a list of other, as os.path does
-        otherStr=str(other)
-        return ufsi.Path(os.path.join(self.__path,otherStr))
+        if not isinstance(other,ufsi.PathInterface):
+            other=ufsi.Path(other)
+
+        if other.isAbsolute():
+            return other
+
+        # Sort out separators
+        selfSep=self.getSeparator()
+        otherStr=str(other).replace(other.getSeparator(),selfSep)
+        selfStr=self._path
+        if not selfStr.endswith(selfSep):
+            selfStr=selfStr+selfSep
+        if otherStr.startswith(selfSep):
+            otherStr=otherStr[len(selfSep):]
+
+        return self.__class__(selfStr+otherStr)
 
 
     def isAbsolute(self):
@@ -41,7 +57,7 @@ class AbstractNativePath(ufsi.PathInterface):
         Returns True if the path is an absolute path, False
         otherwise.
         """
-        return os.path.isabs(self.__path)
+        return os.path.isabs(self._path)
 
 
     def getAuthentication(self):
@@ -98,6 +114,11 @@ class AbstractNativePath(ufsi.PathInterface):
         """
         Returns a Path object that has the path that the symlink
         refers to.
-        TODO: should this be joined with this path or not?
         """
-        return ufsi.Path(os.readlink(self._path))
+        if not self.isSymlink():
+            raise ufsi.NotASymlinkError('%r is not a symlink'%self._path)
+
+        try:
+            return ufsi.Path(os.readlink(self._path))
+        except Exception,e:
+            NativeUtils.handleException(e,self._path)
