@@ -89,6 +89,7 @@ class PathInterface:
            or undefined if the default port number should be used.
          * dirs - a list of directory names, or an empty list if no
            directories were given.
+         * fileName - anything after the last separator character.
          * fileBase - the part of the filename before the last period
            character.
          * fileExt - the part of the filename after the last period
@@ -106,10 +107,10 @@ class PathInterface:
            that are specific to a certain file system type. For
            example, a windows path should also define 'drive' if the
            path contains a drive letter specification.
-         * The only required parts are protocol, dirs and fileBase
+         * The only required parts are protocol, dirs, fileName and fileBase
            since a path should always be able to define these things
            even if it happens to be an empty dir list and a ''
-           filebase. TODO: a filebase may not always be present FTPUrl
+           fileBase. TODO: a fileBase may not always be present: FTPUrl
            
         """
         raise NotImplementedError
