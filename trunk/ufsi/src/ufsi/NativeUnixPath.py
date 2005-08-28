@@ -44,15 +44,16 @@ class NativeUnixPath(ufsi.AbstractNativePath):
         dirs=self._path.split('/')
         fileName=dirs.pop()
 
-        fileParts=fileName.rsplit('.',1)
-        fileExt=None
-        if len(fileParts)>1:
-            fileExt=fileParts[1]
-        fileBase=fileParts[0]
+        if '.' in fileName:
+            (fileBase,fileExt)=fileName.rsplit('.',1)
+        else:
+            fileBase=fileName
+            fileExt=None
 
         d={}
         d['protocol']='NativePath'
         d['dirs']=dirs
+        d['fileName']=fileName
         d['fileBase']=fileBase
         d['fileExt']=fileExt
 
