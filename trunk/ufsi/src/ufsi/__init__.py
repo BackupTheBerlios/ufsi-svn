@@ -15,14 +15,17 @@ from DirInterface import DirInterface
 # import UFSI errors
 from Errors \
 import Error, \
-       InvalidPathError, \
        UnsupportedOperationError, \
        AuthenticationError, \
        AuthenticationRequiredError, \
        AuthenticationInvalidError, \
        UnsupportedAuthenticationError, \
-       IOError, \
+       InvalidArgumentError, \
+       InvalidPathError, \
+       FSError, \
        PathNotFoundError, \
+       NotASymlinkError, \
+       IOError, \
        EOFError, \
        TimeoutError
 
@@ -32,6 +35,8 @@ from AbstractUrlPath import AbstractUrlPath
 
 # import UFSI implementations
 from NativePath import NativePath
+from NativeUnixPath import NativeUnixPath
+from NativeWindowsPath import NativeWindowsPath
 from NativeFile import NativeFile
 from NativeDir import NativeDir
 
@@ -63,6 +68,9 @@ def Path(path):
     if protocol=='http':
         return HttpPath(path)
        
+    if protocol=='ftp':
+        return FtpPath(path)
+
     else:
         return None
 
