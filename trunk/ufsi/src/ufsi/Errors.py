@@ -22,11 +22,6 @@ class Error(Exception):
 
 
 
-class InvalidPathError(Error):
-    pass
-
-
-
 class UnsupportedOperationError(Error):
     pass
 
@@ -58,11 +53,40 @@ class UnsupportedAuthenticationError(AuthenticationError):
 
 
 
+class InvalidArgumentError(Error):
+    """
+    Raised whenever an operation is provided with an invalid argument.
+    """
+    pass
+
+class InvalidPathError(InvalidArgumentError):
+    """
+    Raised whenever a path is provided that isn't of the correct
+    format for a path of that type. Different to PathNotFoundError.
+    """
+    pass
+
+
+
+class FSError(Error):
+    pass
+
+
+class PathNotFoundError(FSError):
+    pass
+
+class NotASymlinkError(FSError):
+    """
+    Raised when a symlink based operation is performed on a
+    non-symlink file system item.
+    """
+    pass
+
+
+
 class IOError(Error):
     pass
 
-class PathNotFoundError(IOError):
-    pass
 
 class EOFError(IOError):
     pass
