@@ -120,7 +120,6 @@ class HttpPath(ufsi.AbstractUrlPath):
         code it is a symlink.
         """
         # TODO: look at 302 and 301 codes for symlinks...
-        # TODO: could/should it actually just be called Link? More generic.
         return False
 
 
@@ -149,14 +148,16 @@ class HttpPath(ufsi.AbstractUrlPath):
         Postconditions:
 
         * An exception has been raised.
+
+        TODO: move to HttpUtils.py
         
         """
         if isinstance(urllib2.HTTPError,e):
             if e.code==404:
                 raise ufsi.PathNotFoundError(
                         'HTTP server returned 404 error whilst '
-                        'trying to access url: "%s"'%self._path
-                        ,e)
+                        'trying to access url: "%s"'%self._path,
+                        e)
         else:
             # we don't know what it is so re-raise it
             raise e
