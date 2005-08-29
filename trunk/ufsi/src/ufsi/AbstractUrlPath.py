@@ -8,6 +8,12 @@ Note: RFC1738 refers to protocols such as HTTP, FTP, GOPHER as
 schemes, whereas the ``ufsi`` module refers to them as protocols, due
 to more common usage.
 
+Note: Although we call paths of this format UrlPaths (as in a URL
+based path) we also call the content after the '/' after the host and
+optional port a urlPath (as in the url's path part), as it is called
+in RFC1738. Generally the case and context of the word's use should
+make the meaning clear.
+
 TODO: extend this to take into account ;typeParams, ?queryParams and
 #fragments
 
@@ -20,7 +26,28 @@ import re
 
 
 class AbstractUrlPath(ufsi.PathInterface):
+    """
+    An abstract implementation of a URL based path. Defines the
+    following methods:
+
+    * __str__
+    * join
+    * split
+    * getAuthentication
+    * setAuthentication
+
+    Defines the following attributes:
+
+    * _path
+    * _auth
+
+    """
+
+    
     def __init__(self,path):
+        """
+        Sets up common attributes of a UrlPath.
+        """
         self._path=path
         self._auth=None
 
@@ -84,12 +111,17 @@ class AbstractUrlPath(ufsi.PathInterface):
           character. If no trailing '/' occurs after the host/port
           part urlPath will be None.
 
+        An implementing class should use this method to perform part
+        of the splitting process but should also split the urlPath
+        into more meaningful parts and append those parts to the
+        returned dict.
+
 
         Raises:
 
         * InvalidPathError when the URL doesn't match the regular
-          expression. Generally this means that the URL is invalid but the
-          regular expression may be erroneous in some cases.
+          expression. Generally this means that the URL is invalid but
+          the regular expression may be erroneous in some cases.
 
         """
         urlRePat=r'(?P<protocol>[^:/]+)://'+\
@@ -99,9 +131,9 @@ class AbstractUrlPath(ufsi.PathInterface):
         
 
         urlRe=re.compile(urlRePat)
-        mo=urlRe.match(pathStr)
+        mo=urlRe.match(self._path)
         if mo is None:
-            raise ufsi.InvalidPathError('"%s" is not a valid URL.'%pathStr)
+            raise ufsi.InvalidPathError('"%s" is not a valid URL.'%self._path)
         d=mo.groupdict()
         # upper and lower case protocols are considered the same
         # TODO: should we perform this transposition on creating the
@@ -110,16 +142,16 @@ class AbstractUrlPath(ufsi.PathInterface):
         return d
 
 
-    def getAuthorisation(self):
+    def getAuthentication(self):
         """
-        Returns the currently set Authorisation object or None if none
-        have been set yet.
+        Returns the currently set Authentication object or None if
+        none have been set yet.
         """
         return self._auth
 
-    def setAuthorisation(self,auth):
+    def setAuthentication(self,auth):
         """
-        Sets the Authorisation object to use when performing
+        Sets the Authentication object to use when performing
         requests.
         """
         self._auth=auth
