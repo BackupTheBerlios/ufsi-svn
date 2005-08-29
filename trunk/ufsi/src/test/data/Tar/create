@@ -1,0 +1,30 @@
+#!/bin/bash
+
+# Existing dir
+rm -Rf existingDir
+mkdir existingDir
+# Existing dir dir list
+touch existingDir/test1
+touch existingDir/test2
+
+# Existing file
+echo "12345678901234567890" > existing
+echo "SecondLine" >> existing
+echo "ThirdLine" >> existing
+
+# Existing valid symlink to a file
+rm existingValidSymlinkFile
+ln -s existing existingValidSymlinkFile
+# Existing invalid symlink to a file
+rm existingInvalidSymlinkFile
+ln -s nonExisting existingInvalidSymlinkFile
+
+# Existing valid symlink to a dir
+rm existingValidSymlinkDir
+ln -s existingDir existingValidSymlinkDir
+# Existing invalid symlink to a dir
+rm existingInvalidSymlinkDir
+ln -s nonExistingDir existingInvalidSymlinkDir
+
+# Tar it all up
+tar -cvf ../tarfile.tar existingDir existing existingValidSymlinkFile existingInvalidSymlinkFile existingValidSymlinkDir existingInvalidSymlinkDir
