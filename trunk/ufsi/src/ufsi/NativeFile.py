@@ -142,3 +142,11 @@ class NativeFile(ufsi.FileInterface):
 
 
 
+    def seek(self,offset):
+        """
+        Seeks to that position within a file.
+
+        TODO: this was added to allow File objects to be used by the
+        tarlib 
+        """
+        self.__fileHandle.seek(offset)
