@@ -1,8 +1,10 @@
 """
 An FTP implementation of ``ufsi.FileInterface``.
+
 """
 
 import ufsi
+import FtpUtils
 
 import ftplib
 
@@ -10,11 +12,14 @@ import ftplib
 class FtpFile(ufsi.FileInterface):
     """
     """
+
+
     def __init__(self,path):
         """
         """
         self.__path=path
         self.__pathStr=str(path)
+        self.__openMode=None
         self.__ftpObject=None
         self.__ftpDataSocket=None
         self.__ftpDataFile=None
@@ -36,40 +41,32 @@ class FtpFile(ufsi.FileInterface):
             raise ufsi.UnsupportedOperationError(
                     'The mode "%s" is not supported by the FTP '
                     'implementation of an ufsi.File object.'%mode)
+        self.__openMode=mode
 
-        # get the various parts required to perform the open
-        s=self.__path.split()
-        host=s['host']
-        port=(s['port'] and s['port'] or 0)
-        urlPath=s['urlPath']
+        urlPath=self.__path.split()['urlPath']
         if urlPath is None or urlPath=='':
             raise ufsi.PathNotFoundError(
                     'FTP path "%s" contains no file path.'
                     %self.__path)
 
-        # defaults
-        user=''
-        password=''
-        auth=self.__path.getAuthorisation()
-        if auth is not None:
-            if isinstance(auth,ufsi.UserPasswordAuthentication):
-                user=auth.getUser()
-                password=auth.getPassword()
-            else:
-                raise ufsi.UnsupportedAuthenticationError(
-                        'FTP only uses user,password authentication')
-        
-        # open the connection and log in
-        ftp=self.__ftpObject=ftplib.FTP()
-        ftp.connect(host,port)
-        ftp.login(user,password)
-        if 'r' in mode:
-            ftpCmd='RETR '+urlPath
-        else:
-            ftpCmd='STOR '+urlPath
+        try:
+            ftp=self.__ftpObject=FtpUtils.getFtpConnection(self.__path)
 
-        self.__ftpDataSocket=ftp.transfercmd(ftpCmd)
-        self.__ftpDataFile=self.__ftpDataSocket.makefile(mode)
+            # execute the appropriate ftp command(s)
+            if 'b' in mode:
+                ftp.voidcmd('TYPE I')
+            else:
+                ftp.voidcmd('TYPE A')
+
+            if 'r' in mode:
+                ftpCmd='RETR '+urlPath
+            else:
+                ftpCmd='STOR '+urlPath
+
+            self.__ftpDataSocket=ftp.transfercmd(ftpCmd)
+            self.__ftpDataFile=self.__ftpDataSocket.makefile(mode)
+        except Exception,e:
+            FtpUtils.handleException(e,self.__pathStr)
 
     def read(self,size=-1):
         return self.__ftpDataFile.read(size)
@@ -100,13 +97,33 @@ class FtpFile(ufsi.FileInterface):
 
             self.__ftpDataSocket.close()
             self.__ftpDataSocket=None
-            
-            self.__ftpObject.voidresp()
+
+            # TODO: look at this - abort is probably ok to be send on
+            # successful download of a file, but it's not
+            # correct. However, we need to determine how much of the
+            # file is left otherwise.
+            if 'w' in self.__openMode:
+                self.__ftpObject.voidresp()
+            else:
+                self.__ftpObject.abort()
             self.__ftpObject.quit()
 
 
     def getStat(self):
-        pass
+        """
+        Returns a dict of information about this file.
+        """
+        try:
+            s=self.__path.split()
+            ftp=FtpUtils.getFtpConnection(self.__path)
+            dl=FtpUtils.getDirList(ftp,s['urlPath'])
+            if not dl:
+                raise ufsi.PathNotFoundError('Path "%s" not found.'
+                                             %self.__path,e)
+            return dl[s['fileName']]
+        except Exception,e:
+            FtpUtils.handleException(e,self.__pathStr)
+            
 
     def getPath(self):
         """
