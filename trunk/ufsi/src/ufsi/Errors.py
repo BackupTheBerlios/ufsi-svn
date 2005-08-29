@@ -1,5 +1,7 @@
 """
 Defines all of the standard UFSI errors.
+
+TODO: standardise all error messages
 """
 
 
@@ -48,6 +50,22 @@ class UnsupportedAuthenticationError(AuthenticationError):
     """
     Raised when a form of authentication was provided that the specific
     file system doesn't support.
+    """
+    pass
+
+
+
+class AuthorisationError(Error):
+    """
+    A base class for exceptions caused by insufficient access.
+    """
+    pass
+    
+
+class AccessDeniedError(Error):
+    """
+    The current authentication level is not sufficient to access this
+    resource.
     """
     pass
 
