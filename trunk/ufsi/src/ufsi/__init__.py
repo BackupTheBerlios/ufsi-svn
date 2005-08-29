@@ -10,7 +10,7 @@ import re
 from PathInterface import PathInterface
 from FileInterface import FileInterface
 from DirInterface import DirInterface
-
+from AuthenticationInterface import AuthenticationInterface
 
 # import UFSI errors
 from Errors \
@@ -20,6 +20,8 @@ import Error, \
        AuthenticationRequiredError, \
        AuthenticationInvalidError, \
        UnsupportedAuthenticationError, \
+       AuthorisationError, \
+       AccessDeniedError, \
        InvalidArgumentError, \
        InvalidPathError, \
        FSError, \
@@ -45,6 +47,12 @@ from HttpFile import HttpFile
 
 from FtpPath import FtpPath
 from FtpFile import FtpFile
+
+from TarPath import TarPath
+from TarDir import TarDir
+
+# authentication implementations
+from UserPasswordAuthentication import UserPasswordAuthentication
 
 
 
