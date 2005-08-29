@@ -45,7 +45,7 @@ def convertStatObjectToDict(s):
     * creationTime
     * userId - id of the user that owns the file or dir
     * groupId - id of the group that owns the file or dir
-    * mode - the permissions of the file or dir
+    * permissions - the permissions of the file or dir
     * inodeNumber
     * inodeDevice
     * inodeLinks - the number of links to the inode
@@ -58,7 +58,7 @@ def convertStatObjectToDict(s):
     d['creationTime']=s[stat.ST_CTIME]
     d['userId']=s[stat.ST_UID]
     d['groupId']=s[stat.ST_GID]
-    d['mode']=s[stat.ST_MODE]
+    d['permissions']=s[stat.ST_MODE]
     d['inodeNumber']=s[stat.ST_INO]
     d['inodeDevice']=s[stat.ST_DEV]
     d['inodeLinks']=s[stat.ST_NLINK]
