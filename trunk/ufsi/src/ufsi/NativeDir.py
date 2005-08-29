@@ -13,6 +13,11 @@ class NativeDir(ufsi.DirInterface):
     """
     The NativeDir class implements the ``ufsi.DirInterface`` for
     natively supported file systems. It is currently os generic.
+
+    TODO: internally use a path object with the '/' stripped, then
+    fileName is the name of this dir. Or write a getDirName method to
+    get the 'dir' part from '/dir/' or 'dir' from '/dir', and a
+    parentDir method too.
     """
 
     
