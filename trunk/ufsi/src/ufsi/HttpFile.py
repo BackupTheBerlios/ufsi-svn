@@ -39,10 +39,18 @@ class HttpFile(ufsi.FileInterface):
         Opens a HTTP connection to the file. If a previous connection
         was opened it is first closed. TODO: currently, mode is
         ignored but we should do a little more validation on it.
+
+        TODO: add this level of error checking to other open methods
         """
         self.close()
-        self.__fileHandle=urllib2.urlopen(self.__pathStr)
-    
+        if mode in ('r','rb'):
+            self.__fileHandle=urllib2.urlopen(self.__pathStr)
+        elif mode in ('w','wb','a','ab'):
+            raise ufsi.UnsupportedOperationError(
+                    'HTTP has no facility to write.')
+        else:
+            raise ufsi.InvalidArgumentError('Unknown mode %r'%mode)
+        
     def read(self,size=None):
         """
         Reads ``size`` bytes from the file (or a default number, if
@@ -86,6 +94,7 @@ class HttpFile(ufsi.FileInterface):
         """
         if self.__fileHandle is not None:
             self.__fileHandle.close()
+            self.__fileHandle=None
 
 
     def getStat(self):
