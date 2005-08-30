@@ -1,3 +1,4 @@
+
 """
 Tests the HttpPath implementation.
 
@@ -31,8 +32,8 @@ class TestHttpPath(unittest.TestCase):
 
         """
         # location of the testing server
-        self.host='localhost'
-        self.server='http://'+host+'/'
+        host='hyde'
+        server='http://'+host+'/'
         
         # paths
         self.existingDirPathStr=server+'existingDir/'
@@ -41,6 +42,9 @@ class TestHttpPath(unittest.TestCase):
         self.nonExistingFilePathStr=server+'nonexisting'
 
         # TODO: test symlinks
+
+        self.server=server
+        self.host=host
 
 
     def testSplit(self):
@@ -66,7 +70,7 @@ class TestHttpPath(unittest.TestCase):
             'emptyPath':
             [server+'',
              {'host':self.host,
-              'urlPath'='',
+              'urlPath':'',
               'fileBase':'',
               'fileExt':None,
               'dirs':[]}],
@@ -75,7 +79,7 @@ class TestHttpPath(unittest.TestCase):
             'fileBaseOnly':
             [server+'fileBase',
              {'host':self.host,
-              'urlPath'='fileBase',
+              'urlPath':'fileBase',
               'fileBase':'fileBase',
               'fileExt':None,
               'dirs':[]}],
@@ -84,7 +88,7 @@ class TestHttpPath(unittest.TestCase):
             'fileExtOnly':
             [server+'.ext',
              {'host':self.host,
-              'urlPath'='.ext',
+              'urlPath':'.ext',
               'fileBase':'',
               'fileExt':'ext',
               'dirs':[]}],
@@ -93,7 +97,7 @@ class TestHttpPath(unittest.TestCase):
             'fileBaseEmptyFileExt':
             [server+'fileBase.',
              {'host':self.host,
-              'urlPath'='fileBase.',
+              'urlPath':'fileBase.',
               'fileBase':'fileBase',
               'fileExt':'',
               'dirs':[]}],
@@ -102,7 +106,7 @@ class TestHttpPath(unittest.TestCase):
             'fullFileName':
             [server+'fileBase.ext',
              {'host':self.host,
-              'urlPath'='fileBase.ext',
+              'urlPath':'fileBase.ext',
               'fileBase':'fileBase',
               'fileExt':'ext',
               'dirs':[]}],
@@ -111,7 +115,7 @@ class TestHttpPath(unittest.TestCase):
             'singleDir':
             [server+'dir/',
              {'host':self.host,
-              'urlPath'='dir/',
+              'urlPath':'dir/',
               'fileBase':'',
               'fileExt':None,
               'dirs':['dir']}],
@@ -120,7 +124,7 @@ class TestHttpPath(unittest.TestCase):
             'twoDirs':
             [server+'dir1/dir2/',
              {'host':self.host,
-              'urlPath'='dir1/dir2/',
+              'urlPath':'dir1/dir2/',
               'fileBase':'',
               'fileExt':None,
               'dirs':['dir1','dir2']}],
@@ -129,7 +133,7 @@ class TestHttpPath(unittest.TestCase):
             'absolutePathTwoDirsFullFileName':
             [server+'dir1/dir2/fileBase.ext',
              {'host':self.host,
-              'urlPath'='dir1/dir2/fileBase.ext',
+              'urlPath':'dir1/dir2/fileBase.ext',
               'fileBase':'fileBase',
               'fileExt':'ext',
               'dirs':['dir1','dir2']}],
@@ -138,14 +142,14 @@ class TestHttpPath(unittest.TestCase):
             'dirWithAPeriod':
             [server+'dir.dirExt/fileBase.fileExt',
              {'host':self.host,
-              'urlPath'='dir.dirExt/fileBase.fileExt',
+              'urlPath':'dir.dirExt/fileBase.fileExt',
               'fileBase':'fileBase',
               'fileExt':'fileExt',
               'dirs':['dir.dirExt']}]
         }
 
         for k in data.iterkeys():
-            s1=ufsi.NativeUnixPath(data[k][0]).split()
+            s1=ufsi.HttpPath(data[k][0]).split()
             s2=data[k][1]
             for s2k in s2.iterkeys():
                 self.assertEquals(s1[s2k],s2[s2k],
@@ -163,7 +167,7 @@ class TestHttpPath(unittest.TestCase):
         
         """
         server=self.server
-        P=lambda p:ufsi.NativeUnixPath(p)
+        P=lambda p:ufsi.Path(p)
         data={
             # 1
             'relativePath':
@@ -172,7 +176,8 @@ class TestHttpPath(unittest.TestCase):
 
             # 2
             'absolutePath':
-            [server+'dir1/',P('/dir2/fileBase.ext'),'/dir2/fileBase.ext'],
+            [server+'dir1/',P('/dir2/fileBase.ext'),
+             str(P('/dir2/fileBase.ext'))],
 
             # 3
             'notSeparatorTerminatedPath':
@@ -185,7 +190,7 @@ class TestHttpPath(unittest.TestCase):
         }
 
         for k in data.iterkeys():
-            p1=P(data[k][0])
+            p1=ufsi.HttpPath(data[k][0])
             p2=data[k][1]
             r1=str(p1.join(p2))
             r2=data[k][2]
@@ -204,19 +209,20 @@ class TestHttpPath(unittest.TestCase):
         4. server with dir
 
         """
+        server=self.server
         data={
             # 1
             'noTrailingSlash':[server[:-1],True],
             # 2
             'trailingSlash':[server,True],
             # 3
-            'serverFile':[server+'file',True]
+            'serverFile':[server+'file',True],
             # 4
             'serverDir':[server+'dir/',True]
         }
 
         for k in data.iterkeys():
-            r1=ufsi.NativeUnixPath(data[k][0]).isAbsolute()
+            r1=ufsi.HttpPath(data[k][0]).isAbsolute()
             r2=data[k][1]
             self.assertEquals(r1,r2,
                               '%s: isAbsolute result was %r but should be %r'
@@ -234,7 +240,7 @@ class TestHttpPath(unittest.TestCase):
         5. existing dir
 
         """
-        P=lambda p:ufsi.NativeUnixPath(p)
+        P=lambda p:ufsi.HttpPath(p)
         existingFilePath=P(self.existingFilePathStr)
         nonExistingFilePath=P(self.nonExistingFilePathStr)
         #existingValidFileSymlinkPath=P(self.existingValidSymlinkFilePathStr)
@@ -293,7 +299,7 @@ class TestHttpPath(unittest.TestCase):
 ##         # 3
 ##         self.assertEquals(nonExistingSymlinkPath.isSymlink(),False,
 ##                           'Symlink %r does not exist'
-                          %str(nonExistingSymlinkPath))
+##                           %str(nonExistingSymlinkPath))
 
 
     def testGetSymlinkPath(self):

@@ -22,18 +22,19 @@ class TestHttpFile(unittest.TestCase):
         Creates the test data:
 
         * existing file, content
-          '12345678901234567890\nSecondLine\nThirdLine'
+          '12345678901234567890\nSecondLine\nThirdLine\n'
         * non existing file
         * write file, empty content
 
         """
         # location of the testing server
-        host='localhost'
+        host='hyde'
         server='http://'+host+'/'
 
         # file paths
         self.existingFilePathStr=server+'existing'
-        self.existingFileContents='12345678901234567890\nSecondLine\nThirdLine'
+        self.existingFileContents=\
+                '12345678901234567890\nSecondLine\nThirdLine\n'
         self.nonExistingFilePathStr=server+'nonExisting'
         self.writeFilePathStr=server+'write'
         self.writeFileContents='test content\nsecond line\n'
@@ -63,20 +64,11 @@ class TestHttpFile(unittest.TestCase):
 
         # 3
         f=existingFilePath.getFile()
-        f.open('w')
-        f.close()
-        self.assertEqual(os.stat(self.existingFilePathStr)[stat.ST_SIZE],0,
-                         'File was not truncated')
+        self.assertRaises(ufsi.UnsupportedOperationError,f.open,'w')
         
         # 4
         f=nonExistingFilePath.getFile()
-        f.open('w')
-        f.close()
-        self.assert_(os.path.exists(self.nonExistingFilePathStr),
-                    'File was not created')
-        self.assertEqual(os.stat(self.nonExistingFilePathStr)[stat.ST_SIZE],0,
-                         'File was not truncated')
-
+        self.assertRaises(ufsi.UnsupportedOperationError,f.open,'w')
 
     def testRead(self):
         """
@@ -190,3 +182,5 @@ class TestHttpFile(unittest.TestCase):
         # 2
         f=nonExistingFilePath.getFile()
         self.assertRaises(ufsi.PathNotFoundError,f.getStat)
+
+
