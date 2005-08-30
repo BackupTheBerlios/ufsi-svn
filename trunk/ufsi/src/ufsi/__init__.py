@@ -50,6 +50,7 @@ from FtpFile import FtpFile
 
 from TarPath import TarPath
 from TarDir import TarDir
+from TarFile import TarFile
 
 # authentication implementations
 from UserPasswordAuthentication import UserPasswordAuthentication
