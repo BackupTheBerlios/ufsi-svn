@@ -69,27 +69,30 @@ class AbstractUrlPath(ufsi.PathInterface):
         if isinstance(other,basestring):
             other=ufsi.Path(other)
 
+        # TODO: put this sort of extra error checking into the other stuff
         if isinstance(other,ufsi.PathInterface):
             if other.isAbsolute():
                 return other
 
             else:
-                otherStr=str(other)
-                otherSep=other.getSeparator()
-                # remove any leading separator character on other
-                while otherStr.startswith(otherSep):
-                    otherStr=otherStr[len(otherSep):]
-
                 pathStr=self._path
                 pathSep=self.getSeparator()
+                otherStr=str(other)
+                otherSep=other.getSeparator()
+
+                otherStr=otherStr.replace(otherSep,pathSep)
+                # remove any leading separator character on other
+                while otherStr.startswith(pathSep):
+                    otherStr=otherStr[len(pathSep):]
+
                 if not pathStr.endswith(pathSep):
                     pathStr+=pathSep
 
                 return ufsi.Path(pathStr+otherStr)
 
         else:
-            raise TypeError("join method requires a string or a"+\
-                            "ufsi.Path object")
+            raise ufsi.InvalidArgumentError("join method requires a string"\
+                                            "or an ufsi.Path object")
 
 
     def split(self):
