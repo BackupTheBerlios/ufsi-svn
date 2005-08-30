@@ -32,7 +32,8 @@ class TestTarFile(unittest.TestCase):
         self.existingFilePathStr='existing'
         self.existingFilePath=ufsi.TarPath(self.tarFilePath,
                                            self.existingFilePathStr)
-        self.existingFileContents='12345678901234567890\nSecondLine\nThirdLine'
+        self.existingFileContents=\
+                '12345678901234567890\nSecondLine\nThirdLine\n'
         self.nonExistingFilePathStr='nonExisting'
         self.nonExistingFilePath=ufsi.TarPath(self.tarFilePath,
                                               self.nonExistingFilePathStr)
@@ -52,8 +53,8 @@ class TestTarFile(unittest.TestCase):
         4. open non-existing file for write
 
         """
-        existingFilePath=ufsi.Path(self.existingFilePathStr)
-        nonExistingFilePath=ufsi.Path(self.nonExistingFilePathStr)
+        existingFilePath=self.existingFilePath
+        nonExistingFilePath=self.nonExistingFilePath
 
         # 1
         f=existingFilePath.getFile()
@@ -81,7 +82,7 @@ class TestTarFile(unittest.TestCase):
         2. read the entire file
 
         """
-        existingFilePath=ufsi.Path(self.existingFilePathStr)
+        existingFilePath=self.existingFilePath
 
         # 1
         f=existingFilePath.getFile()
@@ -108,7 +109,7 @@ class TestTarFile(unittest.TestCase):
         1. Read each line to the end of the file.
 
         """
-        existingFilePath=ufsi.Path(self.existingFilePathStr)
+        existingFilePath=self.existingFilePath
 
         # 1
         f=existingFilePath.getFile()
@@ -126,7 +127,7 @@ class TestTarFile(unittest.TestCase):
         1. Read all lines.
 
         """
-        existingFilePath=ufsi.Path(self.existingFilePathStr)
+        existingFilePath=self.existingFilePath
 
         # 1
         f=existingFilePath.getFile()
@@ -143,7 +144,7 @@ class TestTarFile(unittest.TestCase):
         1. Write to a file.
         
         """
-        writeFilePath=ufsi.Path(self.writeFilePathStr)
+        writeFilePath=self.writeFilePath
 
         # 1
         f=writeFilePath.getFile()
@@ -157,7 +158,7 @@ class TestTarFile(unittest.TestCase):
         1. Write a list of lines to a file.
 
         """
-        writeFilePath=ufsi.Path(self.writeFilePathStr)
+        writeFilePath=self.writeFilePath
 
         # 1
         f=writeFilePath.getFile()
@@ -173,8 +174,8 @@ class TestTarFile(unittest.TestCase):
         2. Get the stat of a non-existing file.
 
         """
-        existingFilePath=ufsi.Path(self.existingFilePathStr)
-        nonExistingFilePath=ufsi.Path(self.nonExistingFilePathStr)
+        existingFilePath=self.existingFilePath
+        nonExistingFilePath=self.nonExistingFilePath
 
         # 1
         f=existingFilePath.getFile()
