@@ -110,9 +110,9 @@ class NativeFile(ufsi.FileInterface):
 
         * The file is closed.
         """
-        if self.__fileHandle!=None:
+        if self.__fileHandle is not None:
             self.__fileHandle.close()
-            self.__fileHandle==None
+            self.__fileHandle=None
 
 
     def getStat(self):
