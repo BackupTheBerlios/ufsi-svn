@@ -227,7 +227,7 @@ class TestNativeFile(unittest.TestCase):
                           'UserID not correct')
         self.assertEquals(s1['groupId'],s2[stat.ST_GID],
                           'GroupID not correct')
-        self.assertEquals(s1['mode'],s2[stat.ST_MODE],
+        self.assertEquals(s1['permissions'],s2[stat.ST_MODE],
                           'Mode not correct')
         self.assertEquals(s1['inodeNumber'],s2[stat.ST_INO],
                           'Inode number not correct')
