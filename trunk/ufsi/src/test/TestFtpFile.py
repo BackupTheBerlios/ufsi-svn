@@ -6,8 +6,6 @@ import ftplib
 
 import ufsi
 
-import FtpUtils
-
 
 class TestFtpFile(unittest.TestCase):
     """
@@ -16,65 +14,53 @@ class TestFtpFile(unittest.TestCase):
 
     def setUp(self):
         """
-        Current crappy limitations:
-        testDataDir must be a '/' dir for cwd to work in FtpUtils
-        Need ftp server to allow at least two ftp connections open at a time
         """
-        # server details
-        ftpHost='localhost'
-        server='ftp://'+ftpHost+'/'
+        # location of the testing server
+        host='localhost'
+        server='ftp://'+host+'/'
+        self.testDataDir='ufsiTd/'
 
         # authentication details
         readUser='ufsitestread'
         readPassword='ufsitestread'
         writeUser='ufsitestwrite'
         writePassword='ufsitestwrite'
+        # to save from creating another account, simply assign
+        # readUserAuth to None for anonymous login
         self.readUserAuth=ufsi.UserPasswordAuthentication(
                 readUser,readPassword)
         self.writeUserAuth=ufsi.UserPasswordAuthentication(
                 writeUser,writePassword)
         self.anonUserAuth=None
 
-        # paths
-        self.testDataDir='/ufsiTd'
+        # files
         self.existingFile='existing'
-        self.existingFilePath=ufsi.Path(
-            server+self.testDataDir+'/'+self.existingFile)
-        self.existingFileContents='01234567890123456789\nSecond line'
+        self.existingFilePath=ufsi.FtpPath(
+            server+self.testDataDir+self.existingFile)
+        self.existingFileContents=\
+                '12345678901234567890\nSecondLine\nThirdLine\n'
+
         self.nonExistingFile='nonExisting'
-        self.nonExistingFilePath=ufsi.Path(
-            server+self.testDataDir+'/'+self.nonExistingFile)
-        self.writeFile='writeFile'
-        self.writeFilePath=ufsi.Path(
-            server+self.testDataDir+'/'+self.writeFile)
-        self.writeFileContents='a couple\nof\nlines'
+        self.nonExistingFilePath=ufsi.FtpPath(
+                server+self.testDataDir+self.nonExistingFile)
 
-        # ftp connection for setup and verification
-        self.ftp=ftplib.FTP(ftpHost,writeUser,writePassword)
-        # TODO: remove (only here for the time being)
-        # self.ftp.set_debuglevel(2)
-
-        # create our test data dir
-        FtpUtils.createDir(self.ftp,self.testDataDir)
-
-        # existing file
-        FtpUtils.createFile(self.ftp,self.testDataDir,self.existingFile,
-                            self.existingFileContents)
-        assert FtpUtils.isFile(self.ftp,self.testDataDir,self.existingFile)
-
-        # non existing file
-        FtpUtils.deleteFile(self.ftp,self.testDataDir,self.nonExistingFile)
-        assert FtpUtils.isFile(self.ftp,self.testDataDir,
-                               self.nonExistingFile)==False
-
+        # dirs
+        self.existingDir='existingDir'
+        self.existingDirPath=ufsi.FtpPath(server+self.testDataDir+
+                                          self.existingDir)
+        self.nonExistingDir='nonExistingDir'
+        self.nonExistingDirPath=ufsi.FtpPath(server+self.testDataDir+
+                                             self.nonExistingDir)
         # write file
-        if FtpUtils.isFile(self.ftp,self.testDataDir,self.writeFile):
-            FtpUtils.deleteFile(self.ftp,self.testDataDir,self.writeFile)
-        assert FtpUtils.isFile(self.ftp,self.testDataDir,self.writeFile)==False
-            
+        self.writeFile='write'
+        self.writeFilePath=ufsi.Path(
+                server+self.testDataDir+self.writeFile)
+        self.writeFileContents='a couple\nof\nlines'
         
-    def tearDown(self):
-        self.ftp.quit()
+        # TODO: test symlinks (when implemented)
+
+        self.server=server
+        self.host=host
 
 
     def testOpen(self):
@@ -92,6 +78,7 @@ class TestFtpFile(unittest.TestCase):
         """
         existingFilePath=self.existingFilePath
         nonExistingFilePath=self.nonExistingFilePath
+        writeFilePath=self.writeFilePath
         
         # 1
         existingFilePath.setAuthentication(self.readUserAuth)
@@ -116,28 +103,35 @@ class TestFtpFile(unittest.TestCase):
         self.assertRaises(ufsi.PathNotFoundError,f.open,'r')
 
         # 5
-        existingFilePath.setAuthentication(self.writeUserAuth)
-        f=existingFilePath.getFile()
+        writeFilePath.setAuthentication(self.writeUserAuth)
+        f=writeFilePath.getFile()
         f.open('w')
         f.close()
-        self.assertEqual(FtpUtils.size(self.ftp,self.testDataDir,
-                                       self.existingFile),
-                         0,'File was not truncated')
+        # test that the file was truncated - assuming the read method works
+        f.open('r')
+        content=f.read()
+        f.close()
+        self.assertEqual(content,'','File was not truncated')
         
         # 6
-        nonExistingFilePath.setAuthentication(self.writeUserAuth)
-        f=nonExistingFilePath.getFile()
-        f.open('w')
-        f.close()
-        self.assertEqual(FtpUtils.size(self.ftp,self.testDataDir,
-                                       self.existingFile),
-                         0,'File was not truncated')
+        # TODO: we can't do this without messing up the above test for
+        # nonExistingFile path on a subsequent run. Or this file needs
+        # to be deleted each run through
+##         nonExistingFilePath.setAuthentication(self.writeUserAuth)
+##         f=nonExistingFilePath.getFile()
+##         f.open('w')
+##         f.close()
+##         # test that the file was truncated - assuming the read method works
+##         f.open('r')
+##         content=f.read()
+##         f.close()
+##         self.assertEqual(content,'','File was not truncated')
 
         # 7
         existingFilePath.setAuthentication(self.readUserAuth)
         f=existingFilePath.getFile()
         # TODO: this should be an access denied error, but FTP isn't
-        # specific enough
+        # specific enough with its error codes
         self.assertRaises(ufsi.PathNotFoundError,f.open,'w')
         # Should not have write access using a read account
 
@@ -220,9 +214,11 @@ class TestFtpFile(unittest.TestCase):
         f.open('w')
         f.write(self.writeFileContents)
         f.close()
-        self.assertEqual(FtpUtils.readFile(self.ftp,self.testDataDir,
-                                           self.writeFile),
-                         self.writeFileContents,
+        # now verify it - assuming the read method works
+        f.open('r')
+        content=f.read()
+        f.close()
+        self.assertEqual(content,self.writeFileContents,
                          'Contents were not written correctly')
 
     def testWriteLines(self):
@@ -240,9 +236,11 @@ class TestFtpFile(unittest.TestCase):
         f.open('w')
         f.writeLines(lines)
         f.close()
-        self.assertEqual(FtpUtils.readFile(self.ftp,self.testDataDir,
-                                           self.writeFile),
-                         self.writeFileContents,
+        # now verify it - assuming the read method works
+        f.open('r')
+        content=f.read()
+        f.close()
+        self.assertEqual(content,self.writeFileContents,
                          'Contents were not written correctly')
 
 

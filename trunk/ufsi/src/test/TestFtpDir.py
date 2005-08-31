@@ -27,15 +27,20 @@ class TestFtpDir(unittest.TestCase):
         TODO: update docstring
 
         """
+        # location of the testing server
+        host='localhost'
+        server='ftp://'+host+'/'
+        self.testDataDir='ufsiTd/'
+
+        # dirs
+        self.existingDir='existingDir'
+        self.existingDirPath=ufsi.FtpPath(server+self.testDataDir+
+                                          self.existingDir)
+        self.existingDirDirList=['file1','file2']
         
-        # paths
-        self.existingDirPathStr='existingDir/'
-        self.existingDirPath=ufsi.TarPath(self.tarFilePath,
-                                          self.existingDirPathStr)
-        self.existingDirDirList=['test1','test2']
-        self.nonExistingDirPathStr='nonexistingDir/'
-        self.nonExistingDirPath=ufsi.TarPath(self.tarFilePath,
-                                          self.nonExistingDirPathStr)
+        self.nonExistingDir='nonExistingDir'
+        self.nonExistingDirPath=ufsi.FtpPath(server+self.testDataDir+
+                                             self.nonExistingDir)
 
 
     def testGetDirList(self):
@@ -50,7 +55,10 @@ class TestFtpDir(unittest.TestCase):
         """
         # 1
         d=self.existingDirPath.getDir()
-        self.assertEquals(d.getDirList(),self.existingDirDirList,
+        dirList=d.getDirList()
+        dirList.sort()
+        self.existingDirDirList.sort()
+        self.assertEquals(dirList,self.existingDirDirList,
                           'Returned dir list was not correct')
 
         # 2
