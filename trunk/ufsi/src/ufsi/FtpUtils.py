@@ -1,6 +1,9 @@
 """
 Common ftp ufsi implementation utility functions.
 
+TODO: escape paths when sent - ie cater for spaces, paths begining
+with a '-'
+
 """
 
 import ufsi
@@ -28,16 +31,21 @@ def handleException(e,path):
     raise e
 
 
-def getFtpConnection(p):
+def getFtpConnection(path):
+    """
+    Handles creating an FTP connection and returning the ftp
+    object. Mainly sorts out the authentication stuff and logs the
+    user in.
+    """
     # get the various parts required to perform the open
-    s=p.split()
+    s=path.split()
     host=s['host']
     port=(s['port'] or 0)
 
     # get some authorisation information
-    user=''
-    password=''
-    auth=p.getAuthentication()
+    user=s['user']
+    password=s['password']
+    auth=path.getAuthentication()
     if auth is not None:
         if isinstance(auth,ufsi.UserPasswordAuthentication):
             user=auth.getUser()
@@ -48,6 +56,8 @@ def getFtpConnection(p):
 
     # open the connection and log in
     ftp=ftplib.FTP()
+    # TODO: URGENT Remove after finished testing
+    #ftp.set_debuglevel(2)
     ftp.connect(host,port)
     ftp.login(user,password)
 
@@ -58,11 +68,9 @@ def getFtpConnection(p):
 def getDirList(ftp,d):
     """
     Parses a list returned from the ftp LIST command (in UNIX mode, MS
-    DOS mode is coming...). Returns it as a list of dicts, where each
-    dict contains some details about the file along with the fileName
-    field.
-    TODO: it would probably be more useful to return a dict with
-    fileName keys.
+    DOS mode is coming...). Returns it as a dict of dicts, where each
+    inner dict contains some details about the file where the filename
+    is the key for the outer dict.
 
     You can also pass a file path instead of a dir path and just get
     info for that file.
@@ -74,10 +82,14 @@ def getDirList(ftp,d):
     sock.close()
     ftp.voidresp()
 
+    # TODO: are there any users or groups with a space?
+    # date of the form: Aug 22 20:09 
+    # perhaps take into account sizes with commas?
+    # TODO: cater for symlinks fname -> path 
     unixListItem='(?P<permissions>[a-z\\-]+)\s+'\
                  '(?P<hardLinks>[0-9]+)\s+'\
-                 '(?P<user>[A-Za-z\\-]+)\s+'\
-                 '(?P<group>[A-Za-z\\-]+)\s+'\
+                 '(?P<owner>\S+)\s+'\
+                 '(?P<group>\S+)\s+'\
                  '(?P<size>[0-9]+)\s+'\
                  '(?P<date>[A-Za-z]+\s+[0-9]+\s+[0-9:]+)\s+'\
                  '(?P<fileName>.+)'
@@ -85,11 +97,12 @@ def getDirList(ftp,d):
     items={}
     for l in s.splitlines():
         mo=unixListItemRe.match(l)
-        assert mo is not None
+        # skip any entries that don't match (some ftp servers include
+        # header or footer lines)
+        if mo is None:
+            continue
         d=mo.groupdict()
         fileName=d['fileName']
-        if fileName in ('.','..'):
-            continue
         del d['fileName']
         items[fileName]=d
         

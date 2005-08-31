@@ -46,6 +46,7 @@ from HttpPath import HttpPath
 from HttpFile import HttpFile
 
 from FtpPath import FtpPath
+from FtpDir import FtpDir
 from FtpFile import FtpFile
 
 from TarPath import TarPath

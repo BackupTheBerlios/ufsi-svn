@@ -5,6 +5,7 @@ An FTP implementation of ``ufsi.PathInterface``.
 
 import ufsi
 import UrlPathUtils
+import FtpUtils
 
 import ftplib
 
@@ -89,14 +90,77 @@ class FtpPath(ufsi.AbstractUrlPath):
 
 
     def isFile(self):
-        pass
+        """
+        Attempts to determine whether the file exists or not:
+          Get the list of the parent dir.
+          If the filename is in the parent dir and '-' starts the
+          permissions.
+        
+        This is simpler than isDir because we can list a file its
+        self, and get the details from that.
+        
+        TODO: Exception: If filename is a dir and also has a filename
+        file within it.
+        
+        """
+        try:
+            ftp=FtpUtils.getFtpConnection(self)
+            d=FtpUtils.getDirList(ftp,self.split()['urlPath'])
+            ftp.quit()
+        except Exception,e:
+            try:
+                FtpUtils.handleException(e,self)
+            except ufsi.PathNotFoundError,e:
+                ftp.quit()
+                return False
+
+        fileName=self.split()['fileName']
+        if fileName in d:
+            if d[fileName]['permissions'].startswith('-'):
+                return True
+        return False
 
     def isDir(self):
-        pass
+        """
+        Attempts to determine whether the dir exists or not:
+          Get the list of the parent dir.
+          If the dirname is in parent dir and 'd' starts permissions.
+        """
+        try:
+            ftp=FtpUtils.getFtpConnection(self)
+            urlPath=self.split()['urlPath']
+            # there has to be a '' path if we found the server.
+            if urlPath=='':
+                ftp.close()
+                return True
+
+            if urlPath.endswith('/'):
+                urlPath.pop()
+
+            parentDir=''
+            dirName=urlPath
+            if '/' in urlPath:
+                (parentDir,dirName)=urlPath.rsplit('/',1)
+            d=FtpUtils.getDirList(ftp,parentDir)
+            ftp.quit()
+            if dirName in d:
+                if d[dirName]['permissions'].startswith('d'):
+                    return True
+            return False
+        except  Exception,e:
+            try:
+                FtpUtils.handleException(e,self)
+            except ufsi.PathNotFoundError,e:
+                return False
+
 
     def isSymlink(self):
-        # TODO: but how? Look for a l in the dir list
-        pass
+        """
+        Returns True if the path points to a symlink or not. Currently
+        unsupported.
+        """
+        # TODO: but how? Look for a l in the dir list?
+        raise UnsupportedOperationError("Not yet supported")
 
 
     def getFile(self):
@@ -114,7 +178,8 @@ class FtpPath(ufsi.AbstractUrlPath):
     def getSymlinkPath(self):
         """
         Returns a Path object for the item that the symlink points to.
-        to.
+        Currently Unsupported.
         """
         # TODO: but how?
-        return None
+        raise UnsupportedOperationError("Not yet supported")
+        

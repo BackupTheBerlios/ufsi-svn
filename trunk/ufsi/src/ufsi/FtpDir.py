@@ -29,39 +29,79 @@ class FtpDir(ufsi.DirInterface):
     """
 
     def __init__(self,path):
+        """
+        Creates a new FtpDir object.
+
+
+        Preconditions:
+        
+        * path is a Path object.
+        * The path exists and is a dir.
+        """
         self.__path=path
+        self.__pathStr=str(path)
 
 
     def __str__(self):
-        return str(self.__path)
+        """
+        Returns the path to this FTP dir as a string.
+        """
+        return self.__pathStr
 
 
     def getDirList(self,filter=None):
         """
+        Returns a list of strings, the name of each dir or file in
+        this directory.
         """
-        ftp=FtpUtils.getFtpConnection(self.__path)
-        d=FtpUtils.getDirList(ftp,self.__path.split()['urlPath'])
-        return d.keys()
+        try:
+            ftp=FtpUtils.getFtpConnection(self.__path)
+            d=FtpUtils.getDirList(ftp,self.__path.split()['urlPath'])
+        except Exception,e:
+            FtpUtils.handleException(e,self.__pathStr)
+        items=d.keys()
+        if '.' in items: del items['.']
+        if '..' in items: del items['..']
+        return items
 
 
     def getStat(self):
         """
-        Returns a dict of information about this directory.
+        Returns a dict of information about this directory. Common
+        values are:
+
+        * size - size of the file system (as a string - may contain
+          commas). TODO: remove commas from size.
+        * permissions - a unix permissions string like: '-rwxrwxrwx'
+        * owner - the owner of the file
+        * group - the group of the file
+          
         """
         try:
-            # TODO: finish fixing this up for a trailing slash
-            # TODO: alternately - is is better to strip a trailing slash? - we know it's a dir...? Trent?
+            # We must find the dir name in it's parent directory
             s=self.__path.split()
             urlPath=s['urlPath']
             if urlPath.endswith('/'):
                 urlPath.pop()
+            # Currently can't get any details from the root dir
+            if urlPath=='':
+                return {}
+
+            # get parent dir (even if it's empty)
+            parentDir=''
+            dirName=urlPath
+            if '/' in urlPath:
+                (parentDir,dirName)=urlPath.rsplit('/',1)
+                # cater for a urlPath of /dir
+                parentDir+='/'
+
             ftp=FtpUtils.getFtpConnection(self.__path)
             
-            dl=FtpUtils.getDirList(ftp,urlPath)
-            if not dl:
+            dirList=FtpUtils.getDirList(ftp,parentDir)
+            if dirName not in dirList:
                 raise ufsi.PathNotFoundError('Path "%s" not found.'
-                                             %self.__path,e)
-            return dl[s['fileName']]
+                                             %self.__path)
+            return dirList[dirName]
         except Exception,e:
             FtpUtils.handleException(e,self.__pathStr)
 
