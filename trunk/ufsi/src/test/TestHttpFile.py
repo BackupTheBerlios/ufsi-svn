@@ -13,7 +13,9 @@ import unittest
 class TestHttpFile(unittest.TestCase):
     """
     Tests the HttpFile implementation
-    
+
+    Currently symlinks (301, 302 error codes) aren't supported and
+    therefore aren't tested here.
     """
 
 
@@ -28,7 +30,7 @@ class TestHttpFile(unittest.TestCase):
 
         """
         # location of the testing server
-        host='hyde'
+        host='localhost'
         server='http://'+host+'/'
 
         # file paths
