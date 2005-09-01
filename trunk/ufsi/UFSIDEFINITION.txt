@@ -20,7 +20,7 @@ Path object constraints and conditions:
    AuthenticationRequiredError should be thrown.
 
 
-    __init__(path)
+    Path(path)
         Creates a Path object. This is the only place where it is
         acceptable to write to a Path object's instance variables.
 
@@ -243,7 +243,7 @@ objects. All Dir implementations must implement them and adhere to
 their specifications.
     
 
-    def __init__(self,path):
+    Dir(path):
         Creates an instance of the Dir implementation given a Path
         object.
 
@@ -313,7 +313,7 @@ objects. All File implementations must implement them and adhere to
 their specifications.
 
     
-    __init__(path)
+    File(path)
         Creates an instance of the File implementation given a Path
         object.
 
