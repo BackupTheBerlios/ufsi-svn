@@ -1,0 +1,467 @@
+The Universal File System Interface Definition
+==============================================
+
+
+Path Objects:
+
+The PathInterface class specifies the methods required on all Path
+objects. All Path implementations must implement them and adhere to
+their specifications.
+
+A Path object provides an object oriented interface to path related
+functions that are performable on a path.
+
+Path object constraints and conditions:
+ * All Path objects are immutable, except for the authentication
+   information. This means that you can be assured that a path string
+   will not change once the path object has been created.
+ * If authentication is required to execute a specified method, but it
+   hasn't been provided (see: setAuthentication()) an
+   AuthenticationRequiredError should be thrown.
+
+
+    __init__(path)
+        Creates a Path object. This is the only place where it is
+        acceptable to write to a Path object's instance variables.
+
+
+    __str__()
+        Returns a string representation of the Path.
+
+        Preconditions
+         * None
+
+        Postconditions
+         * A string that is interpreted  to refer to the same location
+           as  the path  string used  to  create this  Path object  is
+           returned. Ie, it  may not be the exact  same string if, for
+           example, the operating  system understands both the forward
+           slash and back slash characters as separator characters.
+
+
+    split()
+        Splits this path into its various parts and returns the parts
+        in a dict. Common parts are:
+         * protocol - HTTP, FTP, NativePath (for paths without a
+           protocol given), etc... Special cases are:
+            + A windows drive based path should have a protocol type
+              of 'NativeWindowsDrivePath'.
+            + A windows UNC based path should have a protocol type of
+              'NativeWindowsUNCPath'.
+         * host - the name (or ip address) of the computer on which
+           the file system resides.
+         * port - the port number used to connect to the file system,
+           or undefined if the default port number should be used.
+         * dirs - a list of directory names, or an empty list if no
+           directories were given.
+         * fileName - anything after the last separator character.
+         * fileBase - the part of the filename before the last period
+           character.
+         * fileExt - the part of the filename after the last period
+           character.
+
+        Note: Since Path objects are immutable, this method should be
+        optimised to cache the result for subsequent calls.
+
+        Preconditions:
+         * None
+
+        Postconditions:
+         * A dict is returned which must contain any of the above
+           defined parts if they are applicable, and also other parts
+           that are specific to a certain file system type. For
+           example, a windows path should also define 'drive' if the
+           path contains a drive letter specification.
+         * The only required parts are protocol, dirs, fileName and fileBase
+           since a path should always be able to define these things
+           even if it happens to be an empty dir list and a ''
+           fileBase. TODO: a fileBase may not always be present: FTPUrl
+
+
+    join(other)
+        Joins a path on to the end of this path. Acceptable values for
+        ``other`` are a string or a Path object. If ``other`` is an
+        absolute path it alone is the return value.
+
+        Preconditions:
+         * ``other`` is a string or a Path object
+
+        Postconditions:
+         * If ``other`` is an absolute path, the return value is a
+           Path object that represents the path defined by ``other``.
+         * If ``other`` is a relative path, the return value is a Path
+           object that represents the result of appending ``other``
+           onto the end of the path that this Path object represents.
+
+
+    isAbsolute()
+        Returns True if this path is an absolute path. This means that
+        the path is not relative to any current working
+        directory. Therefore, all paths that involve a host must be
+        absolute. Windows paths that start with a drive letter are
+        absolute and Native paths that start with a separator
+        character are absolute.
+
+        Preconditions:
+         * None
+
+        Postconditions:
+         * Returns True if the path is absolute, False otherwise.
+
+
+    getSeparator()
+        Returns the separator string used to separate dirs.
+
+        Preconditions:
+         * None
+
+        Postconditions:
+         * Returns a string of at least one character that occurs
+           between each directory in the path.
+
+
+    setAuthentication(auth)
+        Sets the authentication object for this Path object and any
+        derived objects that would require authentication information.
+
+        Preconditions:
+         * None
+
+        Postconditions:
+         * Any methods that might require authentication now have an
+           authorisation object that can provide authentication
+           information to the file system being accessed.
+
+    
+    getAuthentication()
+        Returns the previously set authentication object.
+
+        Preconditions:
+         * None
+
+        Postconditions:
+         * Returns an authentication object, or ``None`` if an
+           authentication object hasn't been set yet.
+
+    
+    isFile()
+        Returns a boolean to indicate whether the path refers to a
+        file on the file system. The return value will only be True if
+        the path exists on the file system and it refers to a
+        file. Symbolic links should be followed.
+
+        Preconditions:
+         * None
+
+        Postconditions:
+         * Returns True if the path refers to an existing item on
+           the file system and that item is a file.
+         * Returns False if either of the above conditions are not
+           met.
+
+
+    isDir()
+        Returns a boolean to indicate whether the path refers to a
+        dir on the file system. The return value will only be True if
+        the path exists on the file system and it refers to a
+        directory. Symbolic links should be followed.
+
+        Preconditions:
+         * None
+
+        Postconditions:
+         * Returns True if the path refers to an existing item on
+           the file system and that item is a dir.
+         * Returns False if either of the above conditions are not
+           met.
+
+
+    isSymlink()
+        Returns a boolean to indicate whether the path refers to a
+        symlink on the file system. The return value will only be True
+        if the path exists on the file system and it refers to a
+        symlink. Naturally, symlinks should be followed up until the
+        actual filename.
+
+        Preconditions:
+         * None
+
+        Postconditions:
+         * Returns True if the path refers to an existing item on the
+           file system and that item is a symlink.
+         * Returns False if either of the above conditions are not
+           met.
+
+
+    getFile()
+        Returns a File object that will access the file located at
+            this path. No check is performed to determine whether it
+            actually exists; exceptions/errors will occur later when using
+            the File object.
+
+        Preconditions:
+         * None
+
+        Postconditions:
+         * A File object is returned.
+
+
+    getDir()
+        Returns a Dir object that will access the dir located at this
+            path. No check is performed to determine whether it actually
+            exists; exceptions/errors will occur later when using the Dir
+            object.
+
+        Preconditions:
+         * None
+
+        Postconditions:
+         * A Dir object is returned.
+
+
+    getSymlinkPath()
+        Returns a Path object that is the path to the
+            item referred to by the symlink. This path should be the same
+            path as the symlink and must not be joined onto this path.
+
+        Preconditions:
+         * self.isSymlink()==True
+
+        Postconditions:
+         * Result is a Path object that refers to the
+           item that the symlinks points to. If this Path object has been
+           given an Authentication object and the symlink path is on the
+           same file system, the resulting Path object is also given this
+           Authentication object.
+
+
+
+Dir Objects:
+
+The DirInterface class specifies the methods required on all Dir
+objects. All Dir implementations must implement them and adhere to
+their specifications.
+    
+
+    def __init__(self,path):
+        Creates an instance of the Dir implementation given a Path
+        object.
+
+        Preconditions:
+        * path is an instance of PathInstance
+
+        Postconditions:
+        * a Dir object is instantiated
+
+
+    __str__()
+        Returns the path to this dir (as a string, of course).
+
+        Preconditions:
+        * None
+
+        Postconditions:
+        * The path to the dir that this Dir object works on is
+          returned.
+
+
+    getDirList([filter])
+        Returns a list of Path objects that represent each file or
+        directory contained within this directory. The ``filter``
+        parameter should be a regular expression string used with the
+        ``re`` module's ``match`` method.
+
+        Currently the filter is not implemented. Coming very soon.
+
+        Preconditions:
+        * The dir exists on the file system.
+
+        Postconditions:
+        * A list of Path objects are returned that represent the list
+          of files and directories within this directory.
+
+
+    getStat()
+        Returns a dict containing some informational fields about the
+        dir. Different implementations will have different fields but
+        some common fields are listed in the FileInterface class's
+        equivalent method.
+
+        Preconditions:
+        * The dir exists
+
+        Postconditions:
+        * A dict is returned containing some implementation specific
+          information.
+        
+
+    getPath()
+        Returns a Path object for this directory.
+
+        Preconditions:
+        * None
+
+        Postconditions:
+        * A Path object for this dir's path is returned.
+        
+
+
+File Objects:
+
+The FileInterface class specifies the methods required on all File
+objects. All File implementations must implement them and adhere to
+their specifications.
+
+    
+    __init__(path)
+        Creates an instance of the File implementation given a Path
+        object.
+
+        Preconditions:
+        * path is an instance of PathInterface.
+
+        Postconditions:
+        * a File object is instantiated.
+
+
+    __str__()
+        Returns the path to this file (as a string, of course).
+
+        Preconditions:
+        * None
+
+        Postconditions:
+        * The path to the file that this File object works on is
+          returned.
+
+
+    open([mode])
+        Opens the file with the given mode. Valid modes are:
+
+        * r - (the default) reads the file.
+        * w - writes to the file. Opening a file in this manner
+          truncates it.
+        * a - appends to the end of the file.
+
+        Note: Not all file systems support all of the above modes. If
+        a mode is not supported an UnsupportedOperationError should be
+        raised when trying to use it.
+
+        Additionally some mode modifiers are allowed:
+
+        * b - specifies binary mode. The default mode is text
+          based. Many file systems don't differenciate but some
+          (eg. FTP) do
+        * + - specifies open for update. This means that a file can be
+          written to as well as read.? TODO: invesitgate this
+
+        Preconditions:
+        * If opening for read mode the file must exist.
+
+        Postconditions:
+        * The file is opened for reading or writing depending on the
+          specified mode, or a UnsupportedOperationError has been
+          rasied if the mode is not supported for that file system.
+
+
+    read([size])
+        Reads up to ``size`` bytes from the file. If ``size`` is None
+        the file is read up to EOF. On encountering EOF immediately an
+        empty string is returned.
+
+        Preconditions:
+        * The file is already open with a read mode.
+
+        Postconditions:
+        * Up to size bytes were read from the file. If EOF was
+          encountered less bytes were read.
+
+
+    readLine()
+        Reads a single line from the file. Any end of line
+        characters are left on. On encountering EOF immediately an
+        empty string is returned.
+
+        Preconditions:
+        * The file is already open with a text read mode.
+
+        Postconditions:
+        * The next line of the file is read and returned.
+
+
+    readLines()
+        All remaining lines of the file are read and returned as a
+        list. No end of line characters are stripped. If EOF is
+        encountered immediately an empty list is returned.
+
+        Preconditions:
+        * The file is already open with a text read mode.
+
+        Postconditions:
+        * The rest of the file is read into a list of lines and
+          returned.
+
+
+    write(s)
+        Writes the string s to the file. Note that writing to a file
+        may be buffered and therefore ``s`` may not show up in the
+        file until the ``close`` method is called. TODO: add flush
+        method.
+
+        Preconditions:
+        * The file is already open with a write mode.
+
+        Postconditions:
+        * The string s is written to the file.
+
+
+    writeLines(lines)
+        Writes a list of lines to the file. This method is meant to be
+        the equivalent of the ``readLines`` method and therefore each
+        line should end with the required end of line character(s). 
+
+        Preconditions:
+        * The file is already open with a text write mode.
+
+        Postconditions:
+        * The write method is called for each line in the list.
+
+
+    close()
+        Ensures that the file is closed. This method should check to
+        see whether the file is open first before trying to close it.
+
+        Preconditions:
+         * None
+
+        Postconditions:
+         * The file is closed
+
+
+    getStat()
+        Returns a dict containing some informational fields about the
+        file. Different implementations will have different fields but
+        some common fields are:
+
+        * size - the size of the file.
+        * creationTime - the time that the file was created.
+        * accessTime - the time that the file was last accessed.
+        * modificationTime - the time that the file was last modified.
+
+        Preconditions:
+        * The file exists.
+
+        Postconditions:
+        * A dict is returned containing some implementation specific
+          information.
+
+
+    getPath()
+        Returns a Path object for this file.
+
+        Preconditions:
+        * None
+        
+        Postconditions:
+        * A Path object for this file's path is returned.
+

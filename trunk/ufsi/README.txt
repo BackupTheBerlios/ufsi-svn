@@ -16,30 +16,87 @@ competition, 2005. Much appreciation goes out to Google for giving me
 this opportunity. Thank you.
 
 
+License
+=======
+
+Ufsi is distributed under the MIT License. You will find it in the file
+'License.txt' in the root of this repository.
+
+
 Installation
 ============
 
-Currently installation is a manual process of putting the ``src/ufsi``
-directory and its contents into the site-packages directory of
-python's lib directory.
-
-Eg:
-On Unix:
-
-  /usr/local/lib/python2.4/site-packages
-
-On Windows:
-
-  C:\Python\lib\site-packages
-
-
-(or by creating/modifying user.pth in those directories.)
-
-
-A setup.py script is being worked on. When that is complete you will
-simply need to run:
+Simply execute the ``setup.py`` script found in the ``src/`` directory
+like so:
 
    ``python setup.py install``
+
+
+Usage
+=====
+
+The ufsi is mainly comprised of three interface definitions:
+
+* Path (defined in PathInterface)
+* File (defined in FileInterface)
+* Dir (defined in DirInterface)
+
+Ufsi currently supports FTP, HTTP, Native (anything the os module
+supports) and TAR file systems.
+
+An example of how to use ufsi is:
+
+  import ufsi
+
+  p=ufsi.Path('/etc/hosts')
+  assert p.isFile()
+  f=p.getFile()
+  f.open('r')
+  print f.read(20)
+  print f.readLines()
+  f.close()
+
+
+To use ufsi with an HTTP file, simply replace '/etc/hosts' with
+'http://www.google.com.au' in the above example.
+
+
+To use ufsi with an FTP file, replace the url as above, but you may
+also need to setup the authentication parameters for the connection.
+You can do this like so:
+
+  auth=ufsi.UserPasswordAuthentication('username','password')
+  ftpPath.setAuthentication(auth)
+
+The you can proceed to perform operations on an FTP file system as
+that user.
+
+
+To use ufsi with a TAR file you must explicitly create a TAR Path
+object, after which all normal operations are available:
+
+  tarFilePath=ufsi.Path('/tmp/tarfile.tar')
+  tarPath=ufsi.TarPath(tarFilePath,'dir/file')
+
+This creates a path to 'dir/file' in the TAR file.
+
+
+For complete information on the interface definitions see the file
+UFSIDEFINITION.txt. For information specific to a certain
+implementation, you will currently have to read the docstrings in the
+source code.
+
+
+Note: HTTP is a read only protocol and also doesn't have a concept of
+directories. It has a heirarchy path to access a file, but no
+directory list. Instead a path like 'http://www.google.com.au/' is
+considered a file.
+
+
+Note: TAR support is currently read only as python's tarfile module,
+and TAR files themselves aren't set up write support. It may be
+possible, and infact many operations are, but more investigation needs
+to be performed before implementing this.
 
 
 Testing
