@@ -15,6 +15,9 @@ def NativePath(path):
     Checks the type of the current operating system and creates the
     appropriate native implementation of a Path object.
     """
+    if path=='':
+        path=os.getcwd()
+
     if os.name=='nt':
         # TODO: include check for unc style path later
         return NativeWindowsPath(path)
