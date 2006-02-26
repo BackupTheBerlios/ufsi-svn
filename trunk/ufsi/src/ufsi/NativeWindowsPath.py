@@ -49,14 +49,18 @@ class NativeWindowsPath(ufsi.AbstractNativePath):
 
         # dirs
         dirs=p.split('\\')
-        fileBase=dirs.pop()
-        if '.' in fileBase:
-            (fileBase,fileExt)=fileBase.rsplit('.',1)
+        fileName=dirs.pop()
+        if '.' in fileName:
+            (fileBase,fileExt)=fileName.rsplit('.',1)
+        else:
+            fileBase=fileName
+            fileExt=None
 
         # create the dict, cache it and return a copy
         d={}
         d['drive']=drive
         d['dirs']=dirs
+        d['fileName']=fileName
         d['fileBase']=fileBase
         d['fileExt']=fileExt
         self.__split=d

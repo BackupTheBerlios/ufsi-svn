@@ -32,6 +32,7 @@ class NativeUnixPath(ufsi.AbstractNativePath):
 
         * protocol - always has the value 'NativePath'.
         * dirs - a list of directory names.
+        * fileName - anything after the last separator
         * fileBase - any part of the fileName before the last period.
         * fileExt - any part of the fileName after the last period, or
           None if no period is present in the fileName.
