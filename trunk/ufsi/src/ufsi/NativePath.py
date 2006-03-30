@@ -14,6 +14,8 @@ def NativePath(path):
     """
     Checks the type of the current operating system and creates the
     appropriate native implementation of a Path object.
+
+    If an empty string is passed as the path, the cwd is used.
     """
     if path=='':
         path=os.getcwd()
