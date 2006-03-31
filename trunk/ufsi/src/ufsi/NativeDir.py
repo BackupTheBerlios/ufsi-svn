@@ -38,12 +38,17 @@ class NativeDir(ufsi.DirInterface):
 
     def getDirList(self,filter=None):
         """
-        Returns a list of strings? or Path's that exist in this
-        directory. 
+        Returns a list of Path's that exist in this directory. 
         """
         try:
+            if self.__pathStr=='':
+                ds=os.listdir('.')
+            else:
+                ds=os.listdir(self.__pathStr)
+
             # TODO: implement re filtering
-            return os.listdir(self.__pathStr)
+            return map(lambda d:self.__path.join(d),ds)
+
         except Exception,e:
             NativeUtils.handleException(e,self.__pathStr)
 
@@ -53,8 +58,11 @@ class NativeDir(ufsi.DirInterface):
         Returns a dict of information about this directory.
         """
         try:
-            return NativeUtils.convertStatObjectToDict(
-                    os.stat(self.__pathStr))
+            if self.__pathStr=='':
+                selfStr='.'
+            else:
+                selfStr=self.__pathStr
+            return NativeUtils.convertStatObjectToDict(os.stat(selfStr))
         except Exception,e:
             NativeUtils.handleException(e,self.__pathStr)
 

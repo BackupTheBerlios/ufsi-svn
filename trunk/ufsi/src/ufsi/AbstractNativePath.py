@@ -44,7 +44,7 @@ class AbstractNativePath(ufsi.PathInterface):
         selfSep=self.getSeparator()
         otherStr=str(other).replace(other.getSeparator(),selfSep)
         selfStr=self._path
-        if not selfStr.endswith(selfSep):
+        if not selfStr.endswith(selfSep) and selfStr!='':
             selfStr=selfStr+selfSep
         if otherStr.startswith(selfSep):
             otherStr=otherStr[len(selfSep):]
@@ -87,7 +87,12 @@ class AbstractNativePath(ufsi.PathInterface):
         """
         Returns True if this path refers to a dir that exists on the
         native file system.
+
+        An empty path string actually refers to the current working
+        directory and is therefore a directory.
         """
+        if self._path=='':
+            return True
         return os.path.isdir(self._path)
 
     def isSymlink(self):
