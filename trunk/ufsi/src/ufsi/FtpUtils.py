@@ -75,7 +75,8 @@ def getDirList(ftp,d):
     You can also pass a file path instead of a dir path and just get
     info for that file.
     """
-    sock=ftp.transfercmd('LIST '+d)
+    if d!='': d+=' '
+    sock=ftp.transfercmd('LIST'+d)
     f=sock.makefile('r')
     s=f.read()
     f.close()
