@@ -71,7 +71,7 @@ def Path(path):
     protocolMo=protocolRe.match(lcPath)
 
     if protocolMo is None:
-        return NativePath(path)        
+        return NativePath(path)
 
     protocol=protocolMo.group('protocol')
     
@@ -85,3 +85,23 @@ def Path(path):
         return None
 
 
+def Dir(path):
+    """
+    Returns a Dir object from a path string.
+    """
+    p=Path(path)
+    """
+    TODO: Fix error reporting for getDir, with isDir support... perhaps
+    if not p.isDir():
+        return None
+    else:
+    """
+    return p.getDir()
+
+
+def File(path):
+    """
+    Returns a File object from a path string.
+    """
+    p=Path(path)
+    return p.getFile()
