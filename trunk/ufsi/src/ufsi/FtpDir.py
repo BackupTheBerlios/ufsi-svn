@@ -60,8 +60,8 @@ class FtpDir(ufsi.DirInterface):
         except Exception,e:
             FtpUtils.handleException(e,self.__pathStr)
         items=d.keys()
-        if '.' in items: del items['.']
-        if '..' in items: del items['..']
+        if '.' in items: items.remove('.')
+        if '..' in items: items.remove('..')
         return items
 
 
