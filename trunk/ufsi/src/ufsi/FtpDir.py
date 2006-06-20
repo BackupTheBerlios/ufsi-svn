@@ -49,7 +49,7 @@ class FtpDir(ufsi.DirInterface):
         return self.__pathStr
 
 
-    def getDirList(self,filter=None):
+    def getDirList(self,filter=None,sort=None):
         """
         Returns a list of strings, the name of each dir or file in
         this directory.
@@ -62,6 +62,12 @@ class FtpDir(ufsi.DirInterface):
         items=d.keys()
         if '.' in items: items.remove('.')
         if '..' in items: items.remove('..')
+
+        items=map(lambda d:self.__path.join(d),items)
+
+        if sort!=None:
+            items.sort(lambda x,y: cmp(x.split()[sort],y.split()[sort]))
+
         return items
 
 

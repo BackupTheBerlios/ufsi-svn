@@ -54,12 +54,14 @@ class DirInterface:
         raise NotImplementedError
 
 
-    def getDirList(self,filter=None):
+    def getDirList(self,filter=None,sort=None):
         """
         Returns a list of Path objects that represent each file or
         directory contained within this directory. The ``filter``
         parameter should be a regular expression string used with the
-        ``re`` module's ``match`` method.
+        ``re`` module's ``match`` method. The ``sort`` parameter
+        should be a string matching one of the dictionary items from a
+        Path.split() method call.
 
 
         Preconditions:

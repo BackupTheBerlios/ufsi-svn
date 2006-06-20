@@ -36,7 +36,7 @@ class NativeDir(ufsi.DirInterface):
         return self.__pathStr
 
 
-    def getDirList(self,filter=None):
+    def getDirList(self,filter=None,sort=None):
         """
         Returns a list of Path's that exist in this directory. 
         """
@@ -46,8 +46,12 @@ class NativeDir(ufsi.DirInterface):
             else:
                 ds=os.listdir(self.__pathStr)
 
+            ds=map(lambda d:self.__path.join(d),ds)
             # TODO: implement re filtering
-            return map(lambda d:self.__path.join(d),ds)
+
+            if sort!=None:
+                ds.sort(lambda x,y: cmp(x.split()[sort],y.split()[sort]))
+            return ds
 
         except Exception,e:
             NativeUtils.handleException(e,self.__pathStr)
